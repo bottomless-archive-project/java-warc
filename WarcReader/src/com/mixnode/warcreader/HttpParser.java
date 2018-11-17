@@ -81,7 +81,7 @@ public class HttpParser {
    */
   public static Header[] parseHeaders(InputStream is, String charset)
       throws IOException, HttpException {
-    ArrayList headers = new ArrayList();
+    ArrayList<Header> headers = new ArrayList<>();
     String name = null;
     StringBuffer value = null;
     for (; ; ) {
@@ -124,7 +124,7 @@ public class HttpParser {
       headers.add(new BasicHeader(name, value.toString()));
     }
 
-    return (Header[]) headers.toArray(new Header[headers.size()]);
+    return headers.toArray(new Header[0]);
   }
 
   /**
@@ -138,13 +138,7 @@ public class HttpParser {
    * @return The result of the conversion.
    * @since 3.0
    */
-  public static String getString(
-      final byte[] data,
-      int offset,
-      int length,
-      String charset
-  ) {
-
+  public static String getString(final byte[] data, int offset, int length, String charset) {
     if (data == null) {
       throw new IllegalArgumentException("Parameter may not be null");
     }
