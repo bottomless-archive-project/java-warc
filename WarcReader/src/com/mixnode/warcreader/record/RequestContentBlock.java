@@ -20,58 +20,58 @@ import org.apache.http.impl.io.IdentityInputStream;
 import org.apache.http.impl.io.SessionInputBufferImpl;
 import org.apache.http.message.AbstractHttpMessage;
 
-public class RequestContentBlock extends AbstractHttpMessage implements HttpRequest, WarcContentBlock {
-	private static final int BUFFER_SIZE = 1024;
-	private final ProtocolVersion protocolVersion;
-	private final RequestLine requestLine;
+public class RequestContentBlock extends AbstractHttpMessage implements HttpRequest,
+    WarcContentBlock {
 
-	protected InputStream payload;
-	private RequestContentBlock(final HttpRequest request, InputStream payload) throws IOException {
-		protocolVersion = request.getProtocolVersion();
-		requestLine = request.getRequestLine();
-		setHeaders( request.getAllHeaders() );
-		this.payload = payload;
-	}
+  private static final int BUFFER_SIZE = 1024;
+  private final ProtocolVersion protocolVersion;
+  private final RequestLine requestLine;
 
-	@Override
-	public ProtocolVersion getProtocolVersion() {
-		return protocolVersion;
-	}
+  protected InputStream payload;
 
-	@Override
-	public String toString() {
-		return "\nRequest request line: " + this.requestLine +
-			   "\nRequest headers: " + Arrays.toString( this.getAllHeaders());
-	}
+  private RequestContentBlock(final HttpRequest request, InputStream payload) {
+    protocolVersion = request.getProtocolVersion();
+    requestLine = request.getRequestLine();
+    setHeaders(request.getAllHeaders());
+    this.payload = payload;
+  }
 
-	public static RequestContentBlock createWarcRecord(final BoundedInputStream stream) throws IOException {
-		SessionInputBufferImpl buffer = new SessionInputBufferImpl( new HttpTransportMetricsImpl(), BUFFER_SIZE, 0, null, null );
-		buffer.bind(stream);
-		final DefaultHttpRequestParser requestParser = new DefaultHttpRequestParser( buffer );
-		final HttpRequest request;
-		try {
-			request = requestParser.parse();
-		} catch ( HttpException e ) {
-			throw new WarcFormatException( "Can't parse the request", e );
-		}
-		return new RequestContentBlock(request, new IdentityInputStream(buffer));
-	}
+  public ProtocolVersion getProtocolVersion() {
+    return protocolVersion;
+  }
 
+  @Override
+  public String toString() {
+    return "\nRequest request line: " + this.requestLine +
+        "\nRequest headers: " + Arrays.toString(this.getAllHeaders());
+  }
 
-	@Override
-	public InputStream payload() throws IOException {
-		return payload;
-	}
+  public static RequestContentBlock createWarcRecord(final BoundedInputStream stream)
+      throws IOException {
+    SessionInputBufferImpl buffer = new SessionInputBufferImpl(new HttpTransportMetricsImpl(),
+        BUFFER_SIZE, 0, null, null);
+    buffer.bind(stream);
+    final DefaultHttpRequestParser requestParser = new DefaultHttpRequestParser(buffer);
+    final HttpRequest request;
+    try {
+      request = requestParser.parse();
+    } catch (HttpException e) {
+      throw new WarcFormatException("Can't parse the request", e);
+    }
+    return new RequestContentBlock(request, new IdentityInputStream(buffer));
+  }
 
-	@Override
-	public void dump(File file) throws IOException {
-		FileOutputStream out = new FileOutputStream (file);
-		IOUtils.copy(payload(), out);
-		out.close();
-	}
+  public InputStream payload() {
+    return payload;
+  }
 
-	@Override
-	public RequestLine getRequestLine() {
-		return requestLine;
-	}	
+  public void dump(File file) throws IOException {
+    FileOutputStream out = new FileOutputStream(file);
+    IOUtils.copy(payload(), out);
+    out.close();
+  }
+
+  public RequestLine getRequestLine() {
+    return requestLine;
+  }
 }
