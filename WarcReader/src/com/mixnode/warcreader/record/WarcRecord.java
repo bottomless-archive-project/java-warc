@@ -1,9 +1,9 @@
 package com.mixnode.warcreader.record;
 
 import java.io.IOException;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HeaderGroup;
 import org.apache.commons.io.input.BoundedInputStream;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.HeaderGroup;
 
 /**
  * Basic constituent of a WARC file, consisting of a sequence of WARC records. Class WarcRecord
@@ -216,7 +216,7 @@ public class WarcRecord {
   public static void addIfNotPresent(final HeaderGroup headers, final String name,
       final String value) {
     if (!headers.containsHeader(name)) {
-      headers.addHeader(new Header(name, value));
+      headers.addHeader(new BasicHeader(name, value));
     }
   }
 

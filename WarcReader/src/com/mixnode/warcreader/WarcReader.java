@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
-import org.apache.commons.httpclient.HeaderGroup;
-import org.apache.commons.httpclient.HttpParser;
 import org.apache.commons.io.input.BoundedInputStream;
+import org.apache.http.HttpException;
+import org.apache.http.message.HeaderGroup;
 
 /**
  * WarcReader class provides basic functions to read and parse a WARC file. Providing a compressed
@@ -38,6 +38,7 @@ public class WarcReader {
    * Create a WarcReader object for a Compressed stream of a WARC file
    *
    * @param compressedStream Compressed input stream
+   * @throws IOException
    */
   public WarcReader(InputStream compressedStream) throws IOException {
     input = new GZIPInputStream(compressedStream);
@@ -49,6 +50,7 @@ public class WarcReader {
    *
    * @param compressedStream compressedStream Input compressed stream
    * @param charset character set for the parser
+   * @throws IOException
    */
   public WarcReader(InputStream compressedStream, String charset) throws IOException {
     input = new GZIPInputStream(compressedStream);
@@ -61,6 +63,7 @@ public class WarcReader {
    * @param stream Input stream
    * @param charset charset character set for the parser
    * @param compressed whether the input stream is compressed
+   * @throws IOException
    */
   public WarcReader(InputStream stream, String charset, boolean compressed) throws IOException {
     if (compressed) {
@@ -77,6 +80,7 @@ public class WarcReader {
    * after a new 'readRecord' call.
    *
    * @return a WARC record object
+   * @throws IOException
    */
   public WarcRecord readRecord() throws IOException {
     if (lastRecord != null) {
@@ -112,7 +116,7 @@ public class WarcReader {
     HeaderGroup headers = new HeaderGroup();
     try {
       headers.setHeaders(HttpParser.parseHeaders(input, charset));
-    } catch (IOException e) {
+    } catch (IOException | HttpException e) {
       throw new WarcFormatException("cannot parse warc headers");
     }
     try {
