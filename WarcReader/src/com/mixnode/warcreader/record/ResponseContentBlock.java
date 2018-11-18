@@ -1,14 +1,11 @@
 package com.mixnode.warcreader.record;
 
 import com.mixnode.warcreader.WarcFormatException;
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Locale;
-
+import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
@@ -22,8 +19,6 @@ import org.apache.http.impl.io.HttpTransportMetricsImpl;
 import org.apache.http.impl.io.IdentityInputStream;
 import org.apache.http.impl.io.SessionInputBufferImpl;
 import org.apache.http.message.AbstractHttpMessage;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.BoundedInputStream;
 
 /**
  * An implementation of WarcContentBlock interface to handle contents block's of WARC responses.
@@ -142,11 +137,5 @@ public class ResponseContentBlock extends AbstractHttpMessage implements HttpRes
 
   public InputStream payload() throws IOException {
     return getEntity().getContent();
-  }
-
-  public void dump(File file) throws IOException {
-    FileOutputStream out = new FileOutputStream(file);
-    IOUtils.copy(payload(), out);
-    out.close();
   }
 }

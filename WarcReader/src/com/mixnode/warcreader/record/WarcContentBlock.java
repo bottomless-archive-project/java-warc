@@ -1,6 +1,5 @@
 package com.mixnode.warcreader.record;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -24,11 +23,4 @@ public interface WarcContentBlock {
    * @return payload InputStream
    */
   InputStream payload() throws IOException;
-
-  /**
-   * Dump content of a WARC payload to a file
-   *
-   * @param file output File
-   */
-  void dump(File file) throws IOException;
 }

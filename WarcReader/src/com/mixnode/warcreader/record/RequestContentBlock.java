@@ -1,14 +1,9 @@
 package com.mixnode.warcreader.record;
 
 import com.mixnode.warcreader.WarcFormatException;
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
@@ -24,6 +19,7 @@ public class RequestContentBlock extends AbstractHttpMessage implements HttpRequ
     WarcContentBlock {
 
   private static final int BUFFER_SIZE = 1024;
+
   private final ProtocolVersion protocolVersion;
   private final RequestLine requestLine;
 
@@ -63,12 +59,6 @@ public class RequestContentBlock extends AbstractHttpMessage implements HttpRequ
 
   public InputStream payload() {
     return payload;
-  }
-
-  public void dump(File file) throws IOException {
-    FileOutputStream out = new FileOutputStream(file);
-    IOUtils.copy(payload(), out);
-    out.close();
   }
 
   public RequestLine getRequestLine() {
