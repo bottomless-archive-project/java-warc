@@ -3,7 +3,7 @@ package com.mixnode.warcreader.service;
 import com.mixnode.warcreader.record.DefaultContentBlock;
 import com.mixnode.warcreader.record.WarcContentBlock;
 import com.mixnode.warcreader.record.WarcRecord;
-import com.mixnode.warcreader.record.WarcRecord.WarcType;
+import com.mixnode.warcreader.record.WarcType;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;

@@ -2,8 +2,8 @@ package com.mixnode.test.warcreader;
 
 import com.mixnode.warcreader.WarcReader;
 import com.mixnode.warcreader.record.WarcRecord;
-import com.mixnode.warcreader.record.WarcRecord.WarcType;
 
+import com.mixnode.warcreader.record.WarcType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
