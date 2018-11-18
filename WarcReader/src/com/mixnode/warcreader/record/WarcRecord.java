@@ -32,31 +32,28 @@ public class WarcRecord {
     /**
      * 'warcinfo record contains some information about following WARC records
      */
-    warcinfo("warcinfo"),
+    warcinfo,
     /**
      * Request WARC record contains a complete scheme specific (HTTP, HTTPS, etc.) request
      */
-    request("request"),
+    request,
     /**
      * Response WARC record contains a scheme-specific response. The most common use if "response"
      * is for HTTP/HTTPS response
      */
-    response("response"),
+    response,
     /**
      * Resource WARC record contains a resource without HTTP/HTTPS wrapping
      */
-    resource("resource"),
+    resource,
     /**
      * Metadata WARC record usually describes feature of another WARC-Record specified by
      * 'WARC-Concurrent-To header' or 'WARC-Refers-To' WARC headers
      */
-    metadata("metadata"),
-    revisit("revisit"),
-    conversion("conversion"),
-    segmentation("segmentation");
-
-    WarcType(final String value) {
-    }
+    metadata,
+    revisit,
+    conversion,
+    segmentation;
   }
 
   /**
