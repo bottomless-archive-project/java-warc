@@ -7,6 +7,7 @@ import com.morethanheroic.warc.service.record.WarcRecordFactory;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.io.input.BoundedInputStream;
@@ -35,6 +36,25 @@ public class WarcReader implements Closeable {
   protected String charset = DEFAULT_CHARSET;
 
   private BoundedInputStream lastRecordStream;
+
+  public WarcReader(URL url) throws IOException {
+    input = new GZIPInputStream(new AvailableInputStream(url.openStream()));
+  }
+
+  public WarcReader(URL url, String charset) throws IOException {
+    input = new GZIPInputStream(new AvailableInputStream(url.openStream()));
+    this.charset = charset;
+  }
+
+  public WarcReader(URL url, String charset, boolean compressed) throws IOException {
+    if (compressed) {
+      input = new GZIPInputStream(new AvailableInputStream(url.openStream()));
+    } else {
+      input = url.openStream();
+    }
+
+    this.charset = charset;
+  }
 
   /**
    * Create a WarcReader object for a Compressed stream of a WARC file
@@ -70,6 +90,7 @@ public class WarcReader implements Closeable {
     } else {
       input = stream;
     }
+
     this.charset = charset;
   }
 

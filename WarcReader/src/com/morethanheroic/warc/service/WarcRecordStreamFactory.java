@@ -3,6 +3,7 @@ package com.morethanheroic.warc.service;
 import com.morethanheroic.warc.service.record.domain.WarcRecord;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -11,18 +12,23 @@ import java.util.stream.StreamSupport;
 
 public class WarcRecordStreamFactory {
 
-  public Stream<WarcRecord> stream(final InputStream warcFileLocation)
+  public static Stream<WarcRecord> streamOf(final URL url)
       throws IOException {
-    return stream(warcFileLocation, WarcReader.DEFAULT_CHARSET, true);
+    return streamOf(new AvailableInputStream(url.openStream()), WarcReader.DEFAULT_CHARSET, true);
   }
 
-  public Stream<WarcRecord> stream(final InputStream warcFileLocation, final String charset)
+  public static Stream<WarcRecord> streamOf(final InputStream warcFileLocation)
       throws IOException {
-    return stream(warcFileLocation, charset, true);
+    return streamOf(warcFileLocation, WarcReader.DEFAULT_CHARSET, true);
   }
 
-  public Stream<WarcRecord> stream(final InputStream warcFileLocation, final String charset,
-      final boolean compressed) throws IOException {
+  public static Stream<WarcRecord> streamOf(final InputStream warcFileLocation,
+      final String charset) throws IOException {
+    return streamOf(warcFileLocation, charset, true);
+  }
+
+  public static Stream<WarcRecord> streamOf(final InputStream warcFileLocation,
+      final String charset, final boolean compressed) throws IOException {
     final WarcReader warcReader = new WarcReader(warcFileLocation, charset, compressed);
 
     final Iterator<WarcRecord> iterator = new Iterator<>() {
@@ -56,7 +62,7 @@ public class WarcRecordStreamFactory {
         iterator, Spliterator.ORDERED | Spliterator.NONNULL), false);
   }
 
-  private WarcRecord readRecord(final WarcReader warcReader) {
+  private static WarcRecord readRecord(final WarcReader warcReader) {
     try {
       return warcReader.readRecord();
     } catch (IOException e) {

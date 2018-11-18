@@ -1,45 +1,14 @@
 package com.mixnode.test.warcreader;
 
-import com.morethanheroic.warc.service.WarcReader;
-import com.morethanheroic.warc.service.record.domain.WarcRecord;
-
-import com.morethanheroic.warc.service.record.domain.WarcType;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import org.apache.http.HttpResponse;
+import com.morethanheroic.warc.service.WarcRecordStreamFactory;
+import java.net.URL;
 
 public class TestWarcReader {
 
   public static void main(final String[] arg) throws Exception {
-    String fileName = "warc.gz";
-    if (arg.length > 0 && arg[0] != null) {
-      fileName = arg[0];
-    }
-    InputStream in = null;
-    try {
-      in = new FileInputStream(new File(fileName));
-    } catch (IOException e) {
-      System.out.println(
-          "warc.gz is not found. Either rename your warc to warc.gz or enter the name as first main argument");
-    }
-    WarcReader warcReader = new WarcReader(in);
-    WarcRecord record;
+    final URL warcInputStream = new URL("https://commoncrawl.s3.amazonaws.com/crawl-data/CC-MAIN-2018-43/segments/1539583508988.18/warc/CC-MAIN-20181015080248-20181015101748-00000.warc.gz");
 
-    int numRecords = 0;
-    while ((record = warcReader.readRecord()) != null) {
-      if ((++numRecords) % 1000 == 0) {
-        System.out.println(numRecords);
-      }
-      if (record.getType() == WarcType.response) {
-        HttpResponse resp = (HttpResponse) record.getWarcContentBlock();
-        if (!resp.containsHeader("Content-Type")) {
-          System.out.println("No content type");
-        } else {
-          System.out.println(resp.getFirstHeader("Content-Type").getValue());
-        }
-      }
-    }
+    WarcRecordStreamFactory.streamOf(warcInputStream)
+        .forEach(warcRecord -> System.out.println(warcRecord.getRecordId()));
   }
 }
