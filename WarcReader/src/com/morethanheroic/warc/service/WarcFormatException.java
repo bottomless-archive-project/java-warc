@@ -1,14 +1,13 @@
 package com.morethanheroic.warc.service;
 
-import java.io.IOException;
 
-public class WarcFormatException extends IOException {
+public class WarcFormatException extends RuntimeException {
 
-  public WarcFormatException(String message) {
+  public WarcFormatException(final String message) {
     super(message);
   }
 
-  public WarcFormatException(String message, Throwable e) {
+  public WarcFormatException(final String message, final Throwable e) {
     super(message, e);
   }
 }

@@ -4,6 +4,7 @@ import com.morethanheroic.warc.service.content.domain.DefaultContentBlock;
 import com.morethanheroic.warc.service.content.domain.WarcContentBlock;
 import com.morethanheroic.warc.service.content.request.RequestContentBlockFactory;
 import com.morethanheroic.warc.service.content.response.ResponseContentBlockFactory;
+import com.morethanheroic.warc.service.header.HeaderParser;
 import com.morethanheroic.warc.service.record.domain.WarcRecord;
 import com.morethanheroic.warc.service.record.domain.WarcType;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import org.apache.http.message.HeaderGroup;
 public class WarcRecordFactory {
 
   private final ResponseContentBlockFactory responseContentBlockFactory =
-      new ResponseContentBlockFactory();
+      new ResponseContentBlockFactory(new HeaderParser());
 
   private final RequestContentBlockFactory requestContentBlockFactory =
       new RequestContentBlockFactory();
@@ -40,7 +41,7 @@ public class WarcRecordFactory {
     }
     try {
       if (type == WarcType.response) {
-        warcContentBlock = responseContentBlockFactory.createWarcRecord(contentBlockStream);
+        warcContentBlock = responseContentBlockFactory.newResponseContentBlock(contentBlockStream);
       } else if (type == WarcType.request) {
         warcContentBlock = requestContentBlockFactory.createWarcRecord(contentBlockStream);
       } else {
