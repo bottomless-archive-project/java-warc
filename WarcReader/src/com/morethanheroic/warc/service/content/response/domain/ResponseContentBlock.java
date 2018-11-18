@@ -1,6 +1,7 @@
 package com.morethanheroic.warc.service.content.response.domain;
 
 import com.morethanheroic.warc.service.WarcParsionException;
+import com.morethanheroic.warc.service.WarcReader;
 import com.morethanheroic.warc.service.content.domain.WarcContentBlock;
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,10 +81,7 @@ public class ResponseContentBlock implements WarcContentBlock {
    * @return the payload of the content block as string
    */
   public String getPayloadAsString() {
-    if (charset == null) {
-      throw new WarcParsionException(
-          "Unable to parse the payload of a WARC document! The payload is not in a text form!");
-    }
+    final Charset charset = this.charset != null ? this.charset : Charset.forName(WarcReader.DEFAULT_CHARSET);
 
     try {
       return IOUtils.toString(payload, charset);
