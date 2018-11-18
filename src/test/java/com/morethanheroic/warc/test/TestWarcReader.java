@@ -1,4 +1,4 @@
-package com.mixnode.test.warcreader;
+package com.morethanheroic.warc.test;
 
 import com.morethanheroic.warc.service.WarcRecordStreamFactory;
 import com.morethanheroic.warc.service.content.response.domain.ResponseContentBlock;

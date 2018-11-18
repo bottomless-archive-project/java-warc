@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
@@ -34,28 +35,37 @@ public class WarcRecordStreamFactory {
 
     final Iterator<WarcRecord> iterator = new Iterator<>() {
 
-      private boolean hasNext = true;
+      private boolean preloadingDone = false;
+      private WarcRecord nextRecord;
 
       @Override
       public boolean hasNext() {
-        return hasNext;
+        if (!preloadingDone) {
+          preloadNextRecord();
+        }
+
+        return nextRecord != null;
       }
 
       @Override
       public WarcRecord next() {
-        final WarcRecord warcRecord = readRecord(warcReader);
-
-        if (warcRecord == null) {
-          hasNext = false;
-
-          try {
-            warcReader.close();
-          } catch (IOException e) {
-            throw new RuntimeException("Unable to close WARC file!", e);
-          }
+        if (!preloadingDone) {
+          preloadNextRecord();
         }
 
-        return warcRecord;
+        preloadingDone = false;
+
+        if (nextRecord == null) {
+          throw new NoSuchElementException();
+        }
+
+        return nextRecord;
+      }
+
+      private void preloadNextRecord() {
+        preloadingDone = true;
+
+        nextRecord = readRecord(warcReader);
       }
     };
 
