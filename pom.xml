@@ -4,46 +4,30 @@
   <artifactId>warc</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
-  <name>WARC-reader</name>
-  <description>test version of WARC-reader</description>
-  <url>https://github.com/Mixnode/mixnode-warcreader-java</url>
+  <name>Java WARC</name>
+  <description>A WARC file reader in Java.</description>
+  <url>https://github.com/laxika/java-warc</url>
+
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
     </license>
   </licenses>
+
   <developers>
     <developer>
-      <name>Hadi Jooybar</name>
-      <email>mhj@mixnode.com</email>
-      <organization>mixnode inc.</organization>
-      <organizationUrl>http://www.mixnode.com</organizationUrl>
-    </developer>
-    <developer>
-      <name>Nariman Jelveh</name>
-      <email>nj@mixnode.com</email>
-      <organization>mixnode inc.</organization>
-      <organizationUrl>http://www.mixnode.com</organizationUrl>
+      <name>Gyula Lakatos</name>
+      <email>laxika91@gmail.com</email>
     </developer>
   </developers>
+
   <scm>
-    <connection>scm:git:git://github.com/Mixnode/mixnode-warcreader-java.git</connection>
-    <developerConnection>scm:git:ssh://github.com:Mixnode/mixnode-warcreader-java.git
-    </developerConnection>
-    <url>https://github.com/Mixnode/mixnode-warcreader-java/tree/master</url>
+    <connection>scm:git:git://github.com/laxika/java-warc.git</connection>
+    <developerConnection>scm:git:ssh://github.com/laxika/java-warc.git</developerConnection>
+    <url>https://github.com/laxika/java-warc/tree/master</url>
   </scm>
 
-  <distributionManagement>
-    <snapshotRepository>
-      <id>mixnode</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>mixnode</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
   <build>
     <plugins>
       <plugin>
@@ -82,6 +66,7 @@
       </plugin>
     </plugins>
   </build>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
@@ -94,15 +79,15 @@
       <version>2.6</version>
     </dependency>
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.25</version>
+    </dependency>
+    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.4</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.25</version>
     </dependency>
   </dependencies>
 </project>
