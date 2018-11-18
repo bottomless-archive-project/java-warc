@@ -6,7 +6,7 @@ import com.morethanheroic.warc.service.content.request.RequestContentBlockFactor
 import com.morethanheroic.warc.service.content.response.ResponseContentBlockFactory;
 import com.morethanheroic.warc.service.header.HeaderParser;
 import com.morethanheroic.warc.service.record.domain.WarcRecord;
-import com.morethanheroic.warc.service.record.domain.WarcType;
+import com.morethanheroic.warc.service.record.domain.WarcRecordType;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,15 +34,16 @@ public class WarcRecordFactory {
    */
   public WarcRecord createWarcRecord(final HeaderGroup warcHeaders,
       final BoundedInputStream contentBlockStream) {
-    WarcType type = null;
+    WarcRecordType type = null;
     WarcContentBlock warcContentBlock = null;
     if (warcHeaders != null) {
-      type = WarcType.valueOf(warcHeaders.getFirstHeader("WARC-Type").getValue().toLowerCase());
+      type = WarcRecordType.valueOf(
+          warcHeaders.getFirstHeader("WARC-Type").getValue().toUpperCase());
     }
     try {
-      if (type == WarcType.response) {
+      if (type == WarcRecordType.RESPONSE) {
         warcContentBlock = responseContentBlockFactory.newResponseContentBlock(contentBlockStream);
-      } else if (type == WarcType.request) {
+      } else if (type == WarcRecordType.REQUEST) {
         warcContentBlock = requestContentBlockFactory.createWarcRecord(contentBlockStream);
       } else {
         warcContentBlock = new DefaultContentBlock(contentBlockStream);

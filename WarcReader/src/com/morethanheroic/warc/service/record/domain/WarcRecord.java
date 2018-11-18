@@ -24,7 +24,7 @@ import lombok.Builder;
 @Builder
 public class WarcRecord {
 
-  private final WarcType type;
+  private final WarcRecordType type;
   private final Map<String, String> headers;
   private final WarcContentBlock warcContentBlock;
 
@@ -44,7 +44,7 @@ public class WarcRecord {
    *
    * @return WARC-Type
    */
-  public WarcType getType() {
+  public WarcRecordType getType() {
     return type;
   }
 
