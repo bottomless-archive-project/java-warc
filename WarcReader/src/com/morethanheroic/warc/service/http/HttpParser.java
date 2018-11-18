@@ -3,7 +3,7 @@ package com.morethanheroic.warc.service.http;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import org.apache.http.Header;
 import org.apache.http.HttpException;
@@ -22,7 +22,7 @@ public class HttpParser {
    * @return a line from the stream
    * @throws IOException if an I/O problem occurs
    */
-  public static String readLine(InputStream inputStream, String charset) throws IOException {
+  public static String readLine(InputStream inputStream, final Charset charset) throws IOException {
     byte[] rawdata = readRawLine(inputStream);
 
     if (rawdata == null) {
@@ -79,7 +79,7 @@ public class HttpParser {
    * @throws IOException if an IO error occurs while reading from the stream
    * @throws HttpException if there is an error parsing a header value
    */
-  public static Header[] parseHeaders(InputStream is, String charset)
+  public static Header[] parseHeaders(InputStream is, Charset charset)
       throws IOException, HttpException {
     ArrayList<Header> headers = new ArrayList<>();
     String name = null;
@@ -138,19 +138,15 @@ public class HttpParser {
    * @return The result of the conversion.
    * @since 3.0
    */
-  public static String getString(final byte[] data, int offset, int length, String charset) {
+  public static String getString(final byte[] data, int offset, int length, final Charset charset) {
     if (data == null) {
-      throw new IllegalArgumentException("Parameter may not be null");
+      throw new IllegalArgumentException("Parameter may not be null!");
     }
 
-    if (charset == null || charset.length() == 0) {
-      throw new IllegalArgumentException("charset may not be null or empty");
+    if (charset == null) {
+      throw new IllegalArgumentException("charset may not be null or empty!");
     }
 
-    try {
-      return new String(data, offset, length, charset);
-    } catch (UnsupportedEncodingException e) {
-      return new String(data, offset, length);
-    }
+    return new String(data, offset, length, charset);
   }
 }

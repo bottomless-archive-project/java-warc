@@ -4,6 +4,7 @@ import com.morethanheroic.warc.service.record.domain.WarcRecord;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -23,12 +24,12 @@ public class WarcRecordStreamFactory {
   }
 
   public static Stream<WarcRecord> streamOf(final InputStream warcFileLocation,
-      final String charset) throws IOException {
+      final Charset charset) throws IOException {
     return streamOf(warcFileLocation, charset, true);
   }
 
   public static Stream<WarcRecord> streamOf(final InputStream warcFileLocation,
-      final String charset, final boolean compressed) throws IOException {
+      final Charset charset, final boolean compressed) throws IOException {
     final WarcReader warcReader = new WarcReader(warcFileLocation, charset, compressed);
 
     final Iterator<WarcRecord> iterator = new Iterator<>() {

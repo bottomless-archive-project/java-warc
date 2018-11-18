@@ -81,7 +81,7 @@ public class ResponseContentBlock implements WarcContentBlock {
    * @return the payload of the content block as string
    */
   public String getPayloadAsString() {
-    final Charset charset = this.charset != null ? this.charset : Charset.forName(WarcReader.DEFAULT_CHARSET);
+    final Charset charset = this.charset != null ? this.charset : WarcReader.DEFAULT_CHARSET;
 
     try {
       return IOUtils.toString(payload, charset);

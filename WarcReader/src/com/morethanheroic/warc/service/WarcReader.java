@@ -8,6 +8,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.io.input.BoundedInputStream;
@@ -21,39 +22,27 @@ import org.apache.http.message.HeaderGroup;
  */
 public class WarcReader implements Closeable {
 
-  public static final String DEFAULT_CHARSET = "UTF-8";
+  public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
   private final WarcRecordFactory warcRecordFactory = new WarcRecordFactory();
 
-  /**
-   * WARC stream from which all read and parse operations happen.
-   */
-  protected final InputStream input;
-
-  /**
-   * Charset used for parser Default value is "UTF-8"
-   */
-  protected String charset = DEFAULT_CHARSET;
+  private final InputStream input;
+  private final Charset charset;
 
   private BoundedInputStream lastRecordStream;
 
-  public WarcReader(URL url) throws IOException {
-    input = new GZIPInputStream(new AvailableInputStream(url.openStream()));
+  public WarcReader(final URL url) throws IOException {
+    this(url, DEFAULT_CHARSET);
   }
 
-  public WarcReader(URL url, String charset) throws IOException {
-    input = new GZIPInputStream(new AvailableInputStream(url.openStream()));
-    this.charset = charset;
+  public WarcReader(final URL url, final Charset charset) throws IOException {
+    this(url, charset, true);
   }
 
-  public WarcReader(URL url, String charset, boolean compressed) throws IOException {
-    if (compressed) {
-      input = new GZIPInputStream(new AvailableInputStream(url.openStream()));
-    } else {
-      input = url.openStream();
-    }
-
-    this.charset = charset;
+  public WarcReader(final URL url, final Charset charset, final boolean compressed)
+      throws IOException {
+    this(compressed ? new AvailableInputStream(url.openStream()) : url.openStream(), charset,
+        compressed);
   }
 
   /**
@@ -61,8 +50,8 @@ public class WarcReader implements Closeable {
    *
    * @param compressedStream Compressed input stream
    */
-  public WarcReader(InputStream compressedStream) throws IOException {
-    input = new GZIPInputStream(compressedStream);
+  public WarcReader(final InputStream compressedStream) throws IOException {
+    this(compressedStream, DEFAULT_CHARSET);
   }
 
   /**
@@ -72,9 +61,8 @@ public class WarcReader implements Closeable {
    * @param compressedStream compressedStream Input compressed stream
    * @param charset character set for the parser
    */
-  public WarcReader(InputStream compressedStream, String charset) throws IOException {
-    input = new GZIPInputStream(compressedStream);
-    this.charset = charset;
+  public WarcReader(final InputStream compressedStream, final Charset charset) throws IOException {
+    this(compressedStream, charset, true);
   }
 
   /**
@@ -84,7 +72,8 @@ public class WarcReader implements Closeable {
    * @param charset charset character set for the parser
    * @param compressed whether the input stream is compressed
    */
-  public WarcReader(InputStream stream, String charset, boolean compressed) throws IOException {
+  public WarcReader(InputStream stream, final Charset charset, boolean compressed)
+      throws IOException {
     if (compressed) {
       input = new GZIPInputStream(stream);
     } else {
