@@ -1,16 +1,14 @@
 package com.morethanheroic.warc.service;
 
 import com.morethanheroic.warc.service.http.HttpParser;
-import com.morethanheroic.warc.service.record.domain.WarcRecord;
-
 import com.morethanheroic.warc.service.record.WarcRecordFactory;
-import java.io.Closeable;
+import com.morethanheroic.warc.service.record.domain.WarcRecord;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Optional;
 import java.util.zip.GZIPInputStream;
-
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.http.HttpException;
 import org.apache.http.message.HeaderGroup;
@@ -20,8 +18,11 @@ import org.apache.http.message.HeaderGroup;
  * uncompressed stream of WARC file, WarcReader reads WARC records and parses them to {@link
  * WarcRecord} objects.
  */
-public class WarcReader implements Closeable {
+public class WarcReader {
 
+  /**
+   * The default {@link Charset} used by the parser when no other {@link Charset} is provided.
+   */
   public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
   private final WarcRecordFactory warcRecordFactory = new WarcRecordFactory();
@@ -31,83 +32,110 @@ public class WarcReader implements Closeable {
 
   private BoundedInputStream lastRecordStream;
 
-  public WarcReader(final URL url) throws IOException {
-    this(url, DEFAULT_CHARSET);
-  }
-
-  public WarcReader(final URL url, final Charset charset) throws IOException {
-    this(url, charset, true);
-  }
-
-  public WarcReader(final URL url, final Charset charset, final boolean compressed)
-      throws IOException {
-    this(compressed ? new AvailableInputStream(url.openStream()) : url.openStream(), charset,
-        compressed);
-  }
-
   /**
-   * Create a WarcReader object for a Compressed stream of a WARC file
+   * Create a new {@link WarcReader} and set the file on the provided {@link URL} location as the
+   * data source.
    *
-   * @param compressedStream Compressed input stream
+   * @param datasourceLocation the location of the data source to back this reader
    */
-  public WarcReader(final InputStream compressedStream) throws IOException {
-    this(compressedStream, DEFAULT_CHARSET);
+  public WarcReader(final URL datasourceLocation) throws IOException {
+    this(datasourceLocation, DEFAULT_CHARSET);
   }
 
   /**
-   * Create a WarcReader object for a Compressed stream of a WARC file with a specific charset for
-   * the parser
+   * Create a new {@link WarcReader} and set the file on the provided {@link URL} location as the
+   * data source.
    *
-   * @param compressedStream compressedStream Input compressed stream
+   * @param datasourceLocation the location of the data source to back this reader
    * @param charset character set for the parser
    */
-  public WarcReader(final InputStream compressedStream, final Charset charset) throws IOException {
-    this(compressedStream, charset, true);
+  public WarcReader(final URL datasourceLocation, final Charset charset) throws IOException {
+    this(datasourceLocation, charset, true);
   }
 
   /**
-   * Create a WarcReader object for a stream.
+   * Create a new {@link WarcReader} and set the file on the provided {@link URL} location as the
+   * data source.
    *
-   * @param stream Input stream
-   * @param charset charset character set for the parser
-   * @param compressed whether the input stream is compressed
+   * @param datasourceLocation the location of the data source to back this reader
+   * @param charset character set for the parser
+   * @param compressed true if the input stream is compressed, false otherwise
    */
-  public WarcReader(InputStream stream, final Charset charset, boolean compressed)
+  public WarcReader(final URL datasourceLocation, final Charset charset, final boolean compressed)
+      throws IOException {
+    this(compressed ? new AvailableInputStream(datasourceLocation.openStream())
+        : datasourceLocation.openStream(), charset, compressed);
+  }
+
+  /**
+   * Create a new {@link WarcReader} and set the provided stream as the data source.
+   *
+   * @param datasource the data source to back this reader
+   */
+  public WarcReader(final InputStream datasource) throws IOException {
+    this(datasource, DEFAULT_CHARSET);
+  }
+
+  /**
+   * Create a new {@link WarcReader} and set the provided stream as the data source.
+   *
+   * @param datasource the data source to back this reader
+   * @param charset character set for the parser
+   */
+  public WarcReader(final InputStream datasource, final Charset charset) throws IOException {
+    this(datasource, charset, true);
+  }
+
+  /**
+   * Create a new {@link WarcReader} and set the provided stream as the data source.
+   *
+   * @param datasource the data source to back this reader
+   * @param charset character set for the parser
+   * @param compressed true if the input stream is compressed, false otherwise
+   */
+  public WarcReader(final InputStream datasource, final Charset charset, boolean compressed)
       throws IOException {
     if (compressed) {
-      input = new GZIPInputStream(stream);
+      input = new GZIPInputStream(datasource);
     } else {
-      input = stream;
+      input = datasource;
     }
 
     this.charset = charset;
   }
 
   /**
-   * Read a WARC record from A WARC file By a call to this function WARC reader will skip the
-   * current record. This means that any stream from current WARC record will not be accessible
-   * after a new 'readRecord' call.
+   * Read a WARC record from the provided data source. If the returned Optional is empty then the
+   * reader reached the end of the data source.
    *
-   * @return a WARC record object
+   * @return the freshly read WARC record
    */
-  public WarcRecord readRecord() throws IOException {
+  public Optional<WarcRecord> readRecord() {
     if (lastRecordStream != null) {
-      lastRecordStream.skip(Long.MAX_VALUE);
-      HttpParser.readLine(input, charset);
-      HttpParser.readLine(input, charset);
+      try {
+        lastRecordStream.skip(Long.MAX_VALUE);
+
+        HttpParser.readLine(input, charset);
+        HttpParser.readLine(input, charset);
+      } catch (IOException e) {
+        throw new WarcParsionException("Unable to parse the next WARC record!", e);
+      }
     }
 
     return parse();
   }
 
   /**
-   * Base on WARC format specification 'parse' function parses a WARC record and create a WarcRecord
-   * object This function throw WarcFomatException if the structure of an input file is invalid.
-   * Explanation for parse error is provided in the WarcFomatException message
+   * This method based on the WARC format specification parses a WARC record and creates a {@link
+   * WarcRecord} object.
    *
-   * @return Output WARC record
+   * This function throws a {@link WarcFormatException} if the structure of an input file is
+   * invalid. Explanation for parsing error is provided in the message of the exception.
+   *
+   * @return the parsed WARC record
+   * @throws WarcFormatException when unable to parse the next record
    */
-  protected WarcRecord parse() throws WarcFormatException {
+  protected Optional<WarcRecord> parse() {
     WarcRecord record;
     String protocol;
     try {
@@ -116,7 +144,7 @@ public class WarcReader implements Closeable {
       throw new WarcFormatException("Illegal warc format");
     }
     if (protocol == null) {
-      return null;
+      return Optional.empty();
     }
     if (!protocol.toLowerCase().startsWith("warc/")) {
       throw new WarcFormatException("Warc version is missing");
@@ -135,11 +163,6 @@ public class WarcReader implements Closeable {
     } catch (NumberFormatException e) {
       throw new WarcFormatException("Cannot parse warc Content-Length");
     }
-    return record;
-  }
-
-  @Override
-  public void close() throws IOException {
-    input.close();
+    return Optional.of(record);
   }
 }
