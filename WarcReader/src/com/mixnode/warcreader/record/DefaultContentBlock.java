@@ -1,15 +1,9 @@
 package com.mixnode.warcreader.record;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.io.IOUtils;
-
 /**
- * A simple implementation of a WarcContentBlock for Most of WARC-Types. This class simply output
- * the input stream into the payloadStream or a file
+ * A simple implementation of a WarcContentBlock for Most of WARC-Types.
  *
  * @author Hadi Jooybar
  */
@@ -31,19 +25,8 @@ public class DefaultContentBlock implements WarcContentBlock {
    *
    * @return payload stream
    */
-  public InputStream payload() {
+  public InputStream getPayload() {
     return payload;
-  }
-
-  /**
-   * Dump content of a WARC payload to a file
-   *
-   * @param file output File
-   */
-  public void dump(File file) throws IOException {
-    FileOutputStream out = new FileOutputStream(file);
-    IOUtils.copy(payload(), out);
-    out.close();
   }
 
   @Override

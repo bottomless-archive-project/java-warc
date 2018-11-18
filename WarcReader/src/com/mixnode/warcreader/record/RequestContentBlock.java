@@ -57,7 +57,7 @@ public class RequestContentBlock extends AbstractHttpMessage implements HttpRequ
     return new RequestContentBlock(request, new IdentityInputStream(buffer));
   }
 
-  public InputStream payload() {
+  public InputStream getPayload() {
     return payload;
   }
 

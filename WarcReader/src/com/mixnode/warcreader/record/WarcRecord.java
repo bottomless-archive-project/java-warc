@@ -1,5 +1,6 @@
 package com.mixnode.warcreader.record;
 
+import com.mixnode.warcreader.service.ResponseContentBlockFactory;
 import java.io.IOException;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.http.message.BasicHeader;
@@ -23,6 +24,9 @@ import org.apache.http.message.HeaderGroup;
  * @author Hadi Jooybar
  */
 public class WarcRecord {
+
+  private final ResponseContentBlockFactory responseContentBlockFactory =
+      new ResponseContentBlockFactory();
 
   /**
    * WarcType specifies the type of a WARC record. 'WARC-Type' field is mandatory for all WARC
@@ -121,7 +125,7 @@ public class WarcRecord {
     this.stream = contentBlockStream;
     try {
       if (type == WarcType.response) {
-        warcContentBlock = ResponseContentBlock.createWarcRecord(contentBlockStream);
+        warcContentBlock = responseContentBlockFactory.createWarcRecord(contentBlockStream);
       } else if (type == WarcType.request) {
         warcContentBlock = RequestContentBlock.createWarcRecord(contentBlockStream);
       } else {

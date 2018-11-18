@@ -1,6 +1,5 @@
 package com.mixnode.warcreader.record;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -22,5 +21,5 @@ public interface WarcContentBlock {
    *
    * @return payload InputStream
    */
-  InputStream payload() throws IOException;
+  InputStream getPayload();
 }
