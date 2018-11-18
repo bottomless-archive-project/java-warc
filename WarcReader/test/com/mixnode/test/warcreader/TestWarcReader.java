@@ -1,9 +1,9 @@
 package com.mixnode.test.warcreader;
 
-import com.mixnode.warcreader.WarcReader;
-import com.mixnode.warcreader.record.WarcRecord;
+import com.morethanheroic.warc.service.WarcReader;
+import com.morethanheroic.warc.service.record.domain.WarcRecord;
 
-import com.mixnode.warcreader.record.WarcType;
+import com.morethanheroic.warc.service.record.domain.WarcType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

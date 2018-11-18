@@ -1,7 +1,7 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.mixnode.utils</groupId>
-  <artifactId>warcreader</artifactId>
+  <groupId>com.morethanheroic</groupId>
+  <artifactId>warc</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
   <name>WARC-reader</name>

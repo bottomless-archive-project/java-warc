@@ -1,4 +1,4 @@
-package com.mixnode.warcreader.record;
+package com.morethanheroic.warc.service.record.domain;
 
 /**
  * WarcType specifies the type of a WARC record. 'WARC-Type' field is mandatory for all WARC

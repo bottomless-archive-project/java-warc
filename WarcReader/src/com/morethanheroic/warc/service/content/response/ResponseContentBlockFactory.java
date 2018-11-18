@@ -1,7 +1,8 @@
-package com.mixnode.warcreader.service;
+package com.morethanheroic.warc.service.content.response;
 
-import com.mixnode.warcreader.WarcFormatException;
-import com.mixnode.warcreader.record.ResponseContentBlock;
+import com.morethanheroic.warc.service.WarcFormatException;
+import com.morethanheroic.warc.service.content.response.domain.ResponseContentBlock;
+import com.morethanheroic.warc.service.header.HeaderParser;
 import java.io.IOException;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.http.Header;

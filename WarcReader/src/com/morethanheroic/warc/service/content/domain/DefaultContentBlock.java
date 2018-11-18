@@ -1,4 +1,4 @@
-package com.mixnode.warcreader.record;
+package com.morethanheroic.warc.service.content.domain;
 
 import java.io.InputStream;
 

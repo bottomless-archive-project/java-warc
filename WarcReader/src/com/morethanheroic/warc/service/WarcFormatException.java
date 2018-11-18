@@ -1,8 +1,7 @@
-package com.mixnode.warcreader;
+package com.morethanheroic.warc.service;
 
 import java.io.IOException;
 
-@SuppressWarnings("serial")
 public class WarcFormatException extends IOException {
 
   public WarcFormatException(String message) {

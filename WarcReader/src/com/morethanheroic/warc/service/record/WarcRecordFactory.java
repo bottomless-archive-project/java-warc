@@ -1,9 +1,11 @@
-package com.mixnode.warcreader.service;
+package com.morethanheroic.warc.service.record;
 
-import com.mixnode.warcreader.record.DefaultContentBlock;
-import com.mixnode.warcreader.record.WarcContentBlock;
-import com.mixnode.warcreader.record.WarcRecord;
-import com.mixnode.warcreader.record.WarcType;
+import com.morethanheroic.warc.service.content.domain.DefaultContentBlock;
+import com.morethanheroic.warc.service.content.domain.WarcContentBlock;
+import com.morethanheroic.warc.service.content.request.RequestContentBlockFactory;
+import com.morethanheroic.warc.service.content.response.ResponseContentBlockFactory;
+import com.morethanheroic.warc.service.record.domain.WarcRecord;
+import com.morethanheroic.warc.service.record.domain.WarcType;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;

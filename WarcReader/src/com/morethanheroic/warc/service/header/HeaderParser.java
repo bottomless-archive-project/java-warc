@@ -1,4 +1,4 @@
-package com.mixnode.warcreader.service;
+package com.morethanheroic.warc.service.header;
 
 import java.util.Arrays;
 import java.util.Map;

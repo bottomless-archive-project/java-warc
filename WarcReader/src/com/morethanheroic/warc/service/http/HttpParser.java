@@ -1,4 +1,4 @@
-package com.mixnode.warcreader;
+package com.morethanheroic.warc.service.http;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

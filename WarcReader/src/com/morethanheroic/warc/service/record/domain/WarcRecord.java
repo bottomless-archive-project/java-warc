@@ -1,5 +1,6 @@
-package com.mixnode.warcreader.record;
+package com.morethanheroic.warc.service.record.domain;
 
+import com.morethanheroic.warc.service.content.domain.WarcContentBlock;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;

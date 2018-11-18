@@ -1,8 +1,9 @@
-package com.mixnode.warcreader;
+package com.morethanheroic.warc.service;
 
-import com.mixnode.warcreader.record.WarcRecord;
+import com.morethanheroic.warc.service.http.HttpParser;
+import com.morethanheroic.warc.service.record.domain.WarcRecord;
 
-import com.mixnode.warcreader.service.WarcRecordFactory;
+import com.morethanheroic.warc.service.record.WarcRecordFactory;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,11 +14,9 @@ import org.apache.http.HttpException;
 import org.apache.http.message.HeaderGroup;
 
 /**
- * WarcReader class provides basic functions to read and parse a WARC file. Providing a compressed
- * or an uncompressed stream of WARC file, WarcReader reads WARC records and parses it to a
- * WarcRecord object
- *
- * @author Hadi Jooybar
+ * This class provides basic functions to read and parse a WARC file. Providing a compressed or an
+ * uncompressed stream of WARC file, WarcReader reads WARC records and parses them to {@link
+ * WarcRecord} objects.
  */
 public class WarcReader implements Closeable {
 
