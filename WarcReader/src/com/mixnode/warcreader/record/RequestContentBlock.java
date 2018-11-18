@@ -1,67 +1,39 @@
 package com.mixnode.warcreader.record;
 
-import com.mixnode.warcreader.WarcFormatException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import org.apache.commons.io.input.BoundedInputStream;
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.ProtocolVersion;
-import org.apache.http.RequestLine;
-import org.apache.http.impl.io.DefaultHttpRequestParser;
-import org.apache.http.impl.io.HttpTransportMetricsImpl;
-import org.apache.http.impl.io.IdentityInputStream;
-import org.apache.http.impl.io.SessionInputBufferImpl;
-import org.apache.http.message.AbstractHttpMessage;
+import java.util.Collections;
+import java.util.Map;
+import lombok.Builder;
+import lombok.Getter;
 
-public class RequestContentBlock extends AbstractHttpMessage implements HttpRequest,
-    WarcContentBlock {
+@Builder
+public class RequestContentBlock implements WarcContentBlock {
 
-  private static final int BUFFER_SIZE = 1024;
+  @Getter
+  private final String method;
 
-  private final ProtocolVersion protocolVersion;
-  private final RequestLine requestLine;
+  @Getter
+  private final String location;
 
-  protected InputStream payload;
+  @Getter
+  private final InputStream payload;
 
-  private RequestContentBlock(final HttpRequest request, InputStream payload) {
-    protocolVersion = request.getProtocolVersion();
-    requestLine = request.getRequestLine();
-    setHeaders(request.getAllHeaders());
-    this.payload = payload;
+  @Getter
+  private final String protocol;
+
+  @Getter
+  private final int majorProtocolVersion;
+
+  @Getter
+  private final int minorProtocolVersion;
+
+  private final Map<String, String> headers;
+
+  public String getHeader(final String headerName) {
+    return headers.get(headerName);
   }
 
-  public ProtocolVersion getProtocolVersion() {
-    return protocolVersion;
-  }
-
-  @Override
-  public String toString() {
-    return "\nRequest request line: " + this.requestLine +
-        "\nRequest headers: " + Arrays.toString(this.getAllHeaders());
-  }
-
-  public static RequestContentBlock createWarcRecord(final BoundedInputStream stream)
-      throws IOException {
-    SessionInputBufferImpl buffer = new SessionInputBufferImpl(new HttpTransportMetricsImpl(),
-        BUFFER_SIZE, 0, null, null);
-    buffer.bind(stream);
-    final DefaultHttpRequestParser requestParser = new DefaultHttpRequestParser(buffer);
-    final HttpRequest request;
-    try {
-      request = requestParser.parse();
-    } catch (HttpException e) {
-      throw new WarcFormatException("Can't parse the request", e);
-    }
-    return new RequestContentBlock(request, new IdentityInputStream(buffer));
-  }
-
-  public InputStream getPayload() {
-    return payload;
-  }
-
-  public RequestLine getRequestLine() {
-    return requestLine;
+  public Map<String, String> getHeaders() {
+    return Collections.unmodifiableMap(headers);
   }
 }

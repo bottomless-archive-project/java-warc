@@ -3,15 +3,11 @@ package com.mixnode.warcreader.service;
 import com.mixnode.warcreader.WarcFormatException;
 import com.mixnode.warcreader.record.ResponseContentBlock;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.io.DefaultHttpResponseParser;
 import org.apache.http.impl.io.HttpTransportMetricsImpl;
@@ -21,6 +17,8 @@ import org.apache.http.impl.io.SessionInputBufferImpl;
 public class ResponseContentBlockFactory {
 
   private static final int BUFFER_SIZE = 1024;
+
+  private final HeaderParser headerParser = new HeaderParser();
 
   /**
    * Create a ResponseContentBlock from a content block stream of a response WARC.
@@ -49,14 +47,9 @@ public class ResponseContentBlockFactory {
     response.setEntity(entity);
 
     return ResponseContentBlock.builder()
-        .headers(parseHeaders(response))
+        .headers(headerParser.parseHeaders(response))
         .statusCode(response.getStatusLine().getStatusCode())
         .payload(response.getEntity().getContent())
         .build();
-  }
-
-  private Map<String, String> parseHeaders(final HttpResponse response) {
-    return Arrays.stream(response.getAllHeaders())
-        .collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
   }
 }

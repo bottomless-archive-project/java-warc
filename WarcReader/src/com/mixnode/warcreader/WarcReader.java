@@ -2,6 +2,8 @@ package com.mixnode.warcreader;
 
 import com.mixnode.warcreader.record.WarcRecord;
 
+import com.mixnode.warcreader.service.WarcRecordFactory;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
@@ -17,7 +19,9 @@ import org.apache.http.message.HeaderGroup;
  *
  * @author Hadi Jooybar
  */
-public class WarcReader {
+public class WarcReader implements Closeable {
+
+  private final WarcRecordFactory warcRecordFactory = new WarcRecordFactory();
 
   /**
    * WARC stream from which all read and parse operations happen.
@@ -29,16 +33,12 @@ public class WarcReader {
    */
   protected String charset = "UTF-8";
 
-  /**
-   * Internal pointer to the last read WARC record
-   */
-  WarcRecord lastRecord;
+  private BoundedInputStream lastRecordStream;
 
   /**
    * Create a WarcReader object for a Compressed stream of a WARC file
    *
    * @param compressedStream Compressed input stream
-   * @throws IOException
    */
   public WarcReader(InputStream compressedStream) throws IOException {
     input = new GZIPInputStream(compressedStream);
@@ -50,7 +50,6 @@ public class WarcReader {
    *
    * @param compressedStream compressedStream Input compressed stream
    * @param charset character set for the parser
-   * @throws IOException
    */
   public WarcReader(InputStream compressedStream, String charset) throws IOException {
     input = new GZIPInputStream(compressedStream);
@@ -63,7 +62,6 @@ public class WarcReader {
    * @param stream Input stream
    * @param charset charset character set for the parser
    * @param compressed whether the input stream is compressed
-   * @throws IOException
    */
   public WarcReader(InputStream stream, String charset, boolean compressed) throws IOException {
     if (compressed) {
@@ -80,16 +78,15 @@ public class WarcReader {
    * after a new 'readRecord' call.
    *
    * @return a WARC record object
-   * @throws IOException
    */
   public WarcRecord readRecord() throws IOException {
-    if (lastRecord != null) {
-      lastRecord.skip();
+    if (lastRecordStream != null) {
+      lastRecordStream.skip(Long.MAX_VALUE);
       HttpParser.readLine(input, charset);
       HttpParser.readLine(input, charset);
     }
-    lastRecord = parse();
-    return lastRecord;
+
+    return parse();
   }
 
   /**
@@ -121,12 +118,17 @@ public class WarcReader {
     }
     try {
       long payloadSize = Long.parseLong(headers.getFirstHeader("Content-Length").getValue());
-      BoundedInputStream payload = new BoundedInputStream(input, payloadSize);
-      record = new WarcRecord(headers, payload);
+      lastRecordStream = new BoundedInputStream(input, payloadSize);
+
+      record = warcRecordFactory.createWarcRecord(headers, lastRecordStream);
     } catch (NumberFormatException e) {
       throw new WarcFormatException("Cannot parse warc Content-Length");
     }
     return record;
   }
 
+  @Override
+  public void close() throws IOException {
+    input.close();
+  }
 }
