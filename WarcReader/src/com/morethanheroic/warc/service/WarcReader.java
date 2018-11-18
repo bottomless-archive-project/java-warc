@@ -20,6 +20,8 @@ import org.apache.http.message.HeaderGroup;
  */
 public class WarcReader implements Closeable {
 
+  public static final String DEFAULT_CHARSET = "UTF-8";
+
   private final WarcRecordFactory warcRecordFactory = new WarcRecordFactory();
 
   /**
@@ -30,7 +32,7 @@ public class WarcReader implements Closeable {
   /**
    * Charset used for parser Default value is "UTF-8"
    */
-  protected String charset = "UTF-8";
+  protected String charset = DEFAULT_CHARSET;
 
   private BoundedInputStream lastRecordStream;
 
