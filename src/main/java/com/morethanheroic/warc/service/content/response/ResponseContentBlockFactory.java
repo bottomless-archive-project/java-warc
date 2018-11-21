@@ -1,11 +1,13 @@
 package com.morethanheroic.warc.service.content.response;
 
 import com.morethanheroic.warc.service.WarcFormatException;
+import com.morethanheroic.warc.service.WarcParsionException;
 import com.morethanheroic.warc.service.content.response.domain.ResponseContentBlock;
 import com.morethanheroic.warc.service.header.HeaderParser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -42,16 +44,23 @@ public class ResponseContentBlockFactory {
     final SessionInputBuffer buffer = buildInputBuffer(inputStream);
     final HttpResponse response = buildResponse(buffer);
 
-    final String mimeType = ContentType.get(response.getEntity()).getMimeType();
-    final Charset charset = ContentType.get(response.getEntity()).getCharset();
+    try {
+      final ContentType contentType = ContentType.getLenientOrDefault(response.getEntity());
 
-    return ResponseContentBlock.builder()
-        .headers(headerParser.parseHeaders(response))
-        .mimeType(mimeType)
-        .charset(charset)
-        .statusCode(response.getStatusLine().getStatusCode())
-        .payload(response.getEntity().getContent())
-        .build();
+      final String mimeType = contentType.getMimeType();
+      final Charset charset = contentType.getCharset();
+
+      return ResponseContentBlock.builder()
+          .headers(headerParser.parseHeaders(response))
+          .mimeType(mimeType)
+          .charset(charset)
+          .statusCode(response.getStatusLine().getStatusCode())
+          .payload(response.getEntity().getContent())
+          .build();
+    } catch (UnsupportedCharsetException e) {
+      throw new WarcParsionException("Unable to parse WARC record! Unsupported charset found: "
+          + e.getCharsetName() + "!", e);
+    }
   }
 
   private SessionInputBuffer buildInputBuffer(final InputStream stream) {

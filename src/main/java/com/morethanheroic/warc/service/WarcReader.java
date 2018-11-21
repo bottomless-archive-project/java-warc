@@ -23,7 +23,7 @@ public class WarcReader {
   /**
    * The default {@link Charset} used by the parser when no other {@link Charset} is provided.
    */
-  public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+  public static final Charset DEFAULT_CHARSET = Charset.forName("ISO-8859-1");
 
   private final WarcRecordFactory warcRecordFactory = new WarcRecordFactory();
 

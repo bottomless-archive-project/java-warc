@@ -67,4 +67,16 @@ public class WarcRecord {
   public Map<String, String> getHeaders() {
     return Collections.unmodifiableMap(headers);
   }
+
+  public boolean isRequest() {
+    return type == WarcRecordType.REQUEST;
+  }
+
+  public boolean isResponse() {
+    return type == WarcRecordType.RESPONSE;
+  }
+
+  public boolean isWarcinfo() {
+    return type == WarcRecordType.WARCINFO;
+  }
 }
