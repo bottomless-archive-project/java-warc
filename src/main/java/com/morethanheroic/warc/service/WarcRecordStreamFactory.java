@@ -27,9 +27,9 @@ public class WarcRecordStreamFactory {
     return streamOf(warcFileLocation, charset, true);
   }
 
-  public static Stream<WarcRecord> streamOf(final InputStream warcFileLocation,
+  public static Stream<WarcRecord> streamOf(final InputStream inputStream,
       final Charset charset, final boolean compressed) throws IOException {
-    final WarcReader warcReader = new WarcReader(warcFileLocation, charset, compressed);
+    final WarcReader warcReader = new WarcReader(inputStream, charset, compressed);
 
     return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
         new WarcRecordIterator(warcReader), Spliterator.ORDERED | Spliterator.NONNULL), false);
