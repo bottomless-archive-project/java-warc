@@ -6,6 +6,7 @@ import com.morethanheroic.warc.service.header.HeaderParser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.Header;
@@ -57,6 +58,9 @@ public class ResponseContentBlockFactory {
           .payload(response.getEntity().getContent())
           .build();
     } catch (UnsupportedCharsetException e) {
+      throw new WarcFormatException("Unable to parse WARC record! Unsupported charset found: "
+          + e.getCharsetName() + "!", e);
+    } catch (IllegalCharsetNameException e) {
       throw new WarcFormatException("Unable to parse WARC record! Unsupported charset found: "
           + e.getCharsetName() + "!", e);
     }
