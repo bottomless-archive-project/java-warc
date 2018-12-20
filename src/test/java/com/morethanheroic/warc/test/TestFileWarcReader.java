@@ -1,10 +1,10 @@
 package com.morethanheroic.warc.test;
 
-import com.morethanheroic.warc.service.WarcParsionException;
+import com.morethanheroic.warc.service.WarcParsingException;
 import com.morethanheroic.warc.service.WarcReader;
 import com.morethanheroic.warc.service.content.response.domain.ResponseContentBlock;
 import com.morethanheroic.warc.service.record.domain.WarcRecord;
-import com.morethanheroic.warc.service.record.domain.WarcRecordType;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Optional;
@@ -27,7 +27,7 @@ public class TestFileWarcReader {
             .ifPresent(System.out::println);
 
         hasNext = optionalWarcRecord.isPresent();
-      } catch (WarcParsionException e) {
+      } catch (WarcParsingException e) {
         e.printStackTrace();
       }
     }

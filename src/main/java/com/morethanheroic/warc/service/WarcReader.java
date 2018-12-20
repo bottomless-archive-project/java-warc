@@ -118,7 +118,7 @@ public class WarcReader {
         HttpParser.readLine(input, charset);
         HttpParser.readLine(input, charset);
       } catch (IOException e) {
-        throw new WarcParsionException("Unable to parse the next WARC record!", e);
+        throw new WarcParsingException("Unable to parse the next WARC record!", e);
       }
     }
 
@@ -153,7 +153,7 @@ public class WarcReader {
     try {
       headers.setHeaders(HttpParser.parseHeaders(input, charset));
     } catch (IOException | HttpException e) {
-      throw new WarcFormatException("cannot parse warc headers");
+      throw new WarcFormatException("Cannot parse warc headers");
     }
     try {
       long payloadSize = Long.parseLong(headers.getFirstHeader("Content-Length").getValue());

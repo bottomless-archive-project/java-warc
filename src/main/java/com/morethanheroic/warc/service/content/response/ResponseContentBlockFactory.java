@@ -1,7 +1,6 @@
 package com.morethanheroic.warc.service.content.response;
 
 import com.morethanheroic.warc.service.WarcFormatException;
-import com.morethanheroic.warc.service.WarcParsionException;
 import com.morethanheroic.warc.service.content.response.domain.ResponseContentBlock;
 import com.morethanheroic.warc.service.header.HeaderParser;
 import java.io.IOException;
@@ -58,7 +57,7 @@ public class ResponseContentBlockFactory {
           .payload(response.getEntity().getContent())
           .build();
     } catch (UnsupportedCharsetException e) {
-      throw new WarcParsionException("Unable to parse WARC record! Unsupported charset found: "
+      throw new WarcFormatException("Unable to parse WARC record! Unsupported charset found: "
           + e.getCharsetName() + "!", e);
     }
   }

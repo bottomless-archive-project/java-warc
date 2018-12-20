@@ -1,6 +1,6 @@
 package com.morethanheroic.warc.service.content.response.domain;
 
-import com.morethanheroic.warc.service.WarcParsionException;
+import com.morethanheroic.warc.service.WarcParsingException;
 import com.morethanheroic.warc.service.WarcReader;
 import com.morethanheroic.warc.service.content.domain.WarcContentBlock;
 import java.io.IOException;
@@ -86,7 +86,7 @@ public class ResponseContentBlock implements WarcContentBlock {
     try {
       return IOUtils.toString(payload, charset);
     } catch (IOException e) {
-      throw new WarcParsionException("Unable to parse the payload of a WARC document!", e);
+      throw new WarcParsingException("Unable to parse the payload of a WARC document!", e);
     }
   }
 }
