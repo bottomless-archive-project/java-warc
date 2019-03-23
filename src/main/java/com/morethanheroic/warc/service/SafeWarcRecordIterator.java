@@ -50,7 +50,7 @@ public class SafeWarcRecordIterator implements Iterator<WarcRecord> {
 
             hasNextValue = warcRecord.isPresent();
             nextValue = warcRecord.orElse(null);
-        } catch (WarcParsingException e) {
+        } catch (WarcParsingException | WarcFormatException e) {
             log.debug("Failed to parse the next record! Skipping it!", e);
 
             preloadNextRecord();
