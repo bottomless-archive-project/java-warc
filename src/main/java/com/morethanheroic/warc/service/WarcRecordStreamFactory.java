@@ -35,6 +35,6 @@ public class WarcRecordStreamFactory {
         final WarcReader warcReader = new WarcReader(inputStream, charset, compressed);
 
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
-                new WarcRecordIterator(warcReader), Spliterator.ORDERED | Spliterator.NONNULL), false);
+                new SafeWarcRecordIterator(warcReader), Spliterator.ORDERED | Spliterator.NONNULL), false);
     }
 }
