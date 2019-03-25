@@ -6,6 +6,7 @@ import com.morethanheroic.warc.service.record.domain.WarcRecord;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.Optional;
 import java.util.zip.GZIPInputStream;
@@ -55,7 +56,7 @@ public class WarcReader {
 
   /**
    * Create a new {@link WarcReader} and set the file on the provided {@link URL} location as the
-   * data source.
+   * data source. The default timeout value for connecting to the {@link URL} is 120 seconds.
    *
    * @param datasourceLocation the location of the data source to back this reader
    * @param charset character set for the parser
@@ -63,8 +64,21 @@ public class WarcReader {
    */
   public WarcReader(final URL datasourceLocation, final Charset charset, final boolean compressed)
       throws IOException {
-    this(compressed ? new AvailableInputStream(datasourceLocation.openStream())
-        : datasourceLocation.openStream(), charset, compressed);
+    this(buildConnection(datasourceLocation), charset, compressed);
+  }
+
+  /**
+   * Create a new {@link WarcReader} and set the file on the provided {@link URLConnection} as the
+   * data source.
+   *
+   * @param datasourceConnection the location of the data source to back this reader
+   * @param charset character set for the parser
+   * @param compressed true if the input stream is compressed, false otherwise
+   */
+  public WarcReader(final URLConnection datasourceConnection, final Charset charset, final boolean compressed)
+      throws IOException {
+    this(compressed ? new AvailableInputStream(datasourceConnection.getInputStream())
+            : datasourceConnection.getInputStream(), charset, compressed);
   }
 
   /**
@@ -164,5 +178,14 @@ public class WarcReader {
       throw new WarcFormatException("Cannot parse warc Content-Length");
     }
     return Optional.of(record);
+  }
+
+  private static URLConnection buildConnection(final URL datasourceLocation) throws IOException {
+    final URLConnection datasourceConnection = datasourceLocation.openConnection();
+
+    datasourceConnection.setConnectTimeout(120000);
+    datasourceConnection.setReadTimeout(120000);
+
+    return datasourceConnection;
   }
 }
