@@ -14,27 +14,28 @@ import java.util.stream.StreamSupport;
 
 public class WarcRecordStreamFactory {
 
-    public static Stream<WarcRecord> streamOf(final URL url)
-            throws IOException {
-        return streamOf(new AvailableInputStream(new BufferedInputStream(url.openStream())),
+    public static Stream<WarcRecord> streamOf(final URL url) {
+        try {
+            return streamOf(new AvailableInputStream(new BufferedInputStream(url.openStream())),
                 WarcReader.DEFAULT_CHARSET, true);
+        } catch (IOException e) {
+            throw new WarcNetworkException("Unable to open WARC location: " + url + "!", e);
+        }
     }
 
-    public static Stream<WarcRecord> streamOf(final InputStream warcFileLocation)
-            throws IOException {
+    public static Stream<WarcRecord> streamOf(final InputStream warcFileLocation) {
         return streamOf(warcFileLocation, WarcReader.DEFAULT_CHARSET);
     }
 
-    public static Stream<WarcRecord> streamOf(final InputStream warcFileLocation,
-            final Charset charset) throws IOException {
+    public static Stream<WarcRecord> streamOf(final InputStream warcFileLocation, final Charset charset) {
         return streamOf(new BufferedInputStream(warcFileLocation), charset, true);
     }
 
-    public static Stream<WarcRecord> streamOf(final InputStream inputStream,
-            final Charset charset, final boolean compressed) throws IOException {
+    public static Stream<WarcRecord> streamOf(final InputStream inputStream, final Charset charset,
+        final boolean compressed) {
         final WarcReader warcReader = new WarcReader(inputStream, charset, compressed);
 
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
-                new SafeWarcRecordIterator(warcReader), Spliterator.ORDERED | Spliterator.NONNULL), false);
+            new SafeWarcRecordIterator(warcReader), Spliterator.ORDERED | Spliterator.NONNULL), false);
     }
 }

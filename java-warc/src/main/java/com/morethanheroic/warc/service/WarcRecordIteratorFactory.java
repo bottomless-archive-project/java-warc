@@ -11,22 +11,25 @@ import java.util.Iterator;
 
 public class WarcRecordIteratorFactory {
 
-    public static Iterator<WarcRecord> iteratorOf(final URL url) throws IOException {
-        return iteratorOf(new AvailableInputStream(new BufferedInputStream(url.openStream())),
-                WarcReader.DEFAULT_CHARSET, true);
+    public static Iterator<WarcRecord> iteratorOf(final URL url) {
+        try {
+            return iteratorOf(new AvailableInputStream(new BufferedInputStream(url.openStream())),
+                    WarcReader.DEFAULT_CHARSET, true);
+        } catch (IOException e) {
+            throw new WarcNetworkException("Unable to open WARC location: " + url + "!", e);
+        }
     }
 
-    public static Iterator<WarcRecord> iteratorOf(final InputStream inputStream) throws IOException {
+    public static Iterator<WarcRecord> iteratorOf(final InputStream inputStream) {
         return iteratorOf(inputStream, WarcReader.DEFAULT_CHARSET);
     }
 
-    public static Iterator<WarcRecord> iteratorOf(final InputStream inputStream, final Charset charset)
-            throws IOException {
+    public static Iterator<WarcRecord> iteratorOf(final InputStream inputStream, final Charset charset) {
         return iteratorOf(new BufferedInputStream(inputStream), charset, true);
     }
 
     public static Iterator<WarcRecord> iteratorOf(final InputStream inputStream, final Charset charset,
-            final boolean compressed) throws IOException {
+            final boolean compressed) {
         final WarcReader warcReader = new WarcReader(inputStream, charset, compressed);
 
         return new WarcRecordIterator(warcReader);
