@@ -8,9 +8,9 @@ import org.apache.http.NameValuePair;
 
 public class HeaderParser {
 
-  public Map<String, String> parseHeaders(final HttpMessage message) {
-    return Arrays.stream(message.getAllHeaders())
-        .collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue,
-            (headerOne, headerTwo) -> headerOne));
-  }
+    public Map<String, String> parseHeaders(final HttpMessage message) {
+        return Arrays.stream(message.getAllHeaders())
+            .collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue,
+                (headerOne, headerTwo) -> headerOne));
+    }
 }

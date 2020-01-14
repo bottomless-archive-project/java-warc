@@ -28,75 +28,75 @@ import org.apache.http.io.SessionInputBuffer;
 @RequiredArgsConstructor
 public class ResponseContentBlockFactory {
 
-  private static final int BUFFER_SIZE = 1024;
+    private static final int BUFFER_SIZE = 1024;
 
-  private final HeaderParser headerParser;
+    private final HeaderParser headerParser;
 
-  /**
-   * Create a {@link ResponseContentBlock} from a content block {@link InputStream} of a response
-   * WARC entry.
-   *
-   * @param inputStream the response WARC entry's content block stream
-   * @return the newly created content block
-   * @throws IOException when an error happens while reading the input stream
-   */
-  public ResponseContentBlock newResponseContentBlock(final InputStream inputStream)
-      throws IOException {
-    final SessionInputBuffer buffer = buildInputBuffer(inputStream);
-    final HttpResponse response = buildResponse(buffer);
+    /**
+     * Create a {@link ResponseContentBlock} from a content block {@link InputStream} of a response
+     * WARC entry.
+     *
+     * @param inputStream the response WARC entry's content block stream
+     * @return the newly created content block
+     * @throws IOException when an error happens while reading the input stream
+     */
+    public ResponseContentBlock newResponseContentBlock(final InputStream inputStream)
+        throws IOException {
+        final SessionInputBuffer buffer = buildInputBuffer(inputStream);
+        final HttpResponse response = buildResponse(buffer);
 
-    try {
-      final ContentType contentType = ContentType.getLenientOrDefault(response.getEntity());
+        try {
+            final ContentType contentType = ContentType.getLenientOrDefault(response.getEntity());
 
-      final String mimeType = contentType.getMimeType();
-      final Charset charset = contentType.getCharset();
+            final String mimeType = contentType.getMimeType();
+            final Charset charset = contentType.getCharset();
 
-      return ResponseContentBlock.builder()
-          .headers(headerParser.parseHeaders(response))
-          .mimeType(mimeType)
-          .charset(charset)
-          .statusCode(response.getStatusLine().getStatusCode())
-          .payload(response.getEntity().getContent())
-          .build();
-    } catch (UnsupportedCharsetException e) {
-      throw new WarcFormatException("Unable to parse WARC record! Unsupported charset found: "
-          + e.getCharsetName() + "!", e);
-    } catch (IllegalCharsetNameException e) {
-      throw new WarcFormatException("Unable to parse WARC record! Unsupported charset found: "
-          + e.getCharsetName() + "!", e);
-    }
-  }
-
-  private SessionInputBuffer buildInputBuffer(final InputStream stream) {
-    final SessionInputBufferImpl buffer = new SessionInputBufferImpl(new HttpTransportMetricsImpl(),
-        BUFFER_SIZE, 0, null, null);
-
-    buffer.bind(stream);
-
-    return buffer;
-  }
-
-  private HttpResponse buildResponse(final SessionInputBuffer buffer) throws IOException {
-    final DefaultHttpResponseParser responseParser = new DefaultHttpResponseParser(buffer);
-
-    final HttpResponse response;
-    try {
-      response = responseParser.parse();
-    } catch (HttpException e) {
-      throw new WarcFormatException("Can't parse the WARC response!", e);
+            return ResponseContentBlock.builder()
+                .headers(headerParser.parseHeaders(response))
+                .mimeType(mimeType)
+                .charset(charset)
+                .statusCode(response.getStatusLine().getStatusCode())
+                .payload(response.getEntity().getContent())
+                .build();
+        } catch (UnsupportedCharsetException e) {
+            throw new WarcFormatException("Unable to parse WARC record! Unsupported charset found: "
+                + e.getCharsetName() + "!", e);
+        } catch (IllegalCharsetNameException e) {
+            throw new WarcFormatException("Unable to parse WARC record! Unsupported charset found: "
+                + e.getCharsetName() + "!", e);
+        }
     }
 
-    response.setEntity(buildEntity(buffer, response));
+    private SessionInputBuffer buildInputBuffer(final InputStream stream) {
+        final SessionInputBufferImpl buffer = new SessionInputBufferImpl(new HttpTransportMetricsImpl(),
+            BUFFER_SIZE, 0, null, null);
 
-    return response;
-  }
+        buffer.bind(stream);
 
-  private HttpEntity buildEntity(SessionInputBuffer buffer, HttpResponse response) {
-    final InputStreamEntity entity = new InputStreamEntity(new IdentityInputStream(buffer));
-    final Header contentTypeHeader = response.getFirstHeader(HttpHeaders.CONTENT_TYPE);
-    if (contentTypeHeader != null) {
-      entity.setContentType(contentTypeHeader);
+        return buffer;
     }
-    return entity;
-  }
+
+    private HttpResponse buildResponse(final SessionInputBuffer buffer) throws IOException {
+        final DefaultHttpResponseParser responseParser = new DefaultHttpResponseParser(buffer);
+
+        final HttpResponse response;
+        try {
+            response = responseParser.parse();
+        } catch (HttpException e) {
+            throw new WarcFormatException("Can't parse the WARC response!", e);
+        }
+
+        response.setEntity(buildEntity(buffer, response));
+
+        return response;
+    }
+
+    private HttpEntity buildEntity(SessionInputBuffer buffer, HttpResponse response) {
+        final InputStreamEntity entity = new InputStreamEntity(new IdentityInputStream(buffer));
+        final Header contentTypeHeader = response.getFirstHeader(HttpHeaders.CONTENT_TYPE);
+        if (contentTypeHeader != null) {
+            entity.setContentType(contentTypeHeader);
+        }
+        return entity;
+    }
 }

@@ -15,11 +15,11 @@ import java.io.InputStream;
  */
 public interface WarcContentBlock {
 
-  /**
-   * Return an InputStream of WARC payload Payload referred to, or contained by a WARC record as a
-   * meaningful subset of the content block
-   *
-   * @return payload InputStream
-   */
-  InputStream getPayload();
+    /**
+     * Return an InputStream of WARC payload Payload referred to, or contained by a WARC record as a
+     * meaningful subset of the content block
+     *
+     * @return payload InputStream
+     */
+    InputStream getPayload();
 }

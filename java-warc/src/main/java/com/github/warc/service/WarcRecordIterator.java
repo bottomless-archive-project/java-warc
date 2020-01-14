@@ -9,41 +9,41 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class WarcRecordIterator implements Iterator<WarcRecord> {
 
-  private final WarcReader warcReader;
+    private final WarcReader warcReader;
 
-  private boolean preloadDone;
-  private boolean hasNextValue;
-  private WarcRecord nextValue;
+    private boolean preloadDone;
+    private boolean hasNextValue;
+    private WarcRecord nextValue;
 
-  @Override
-  public boolean hasNext() {
-    if (!preloadDone) {
-      preloadNextRecord();
+    @Override
+    public boolean hasNext() {
+        if (!preloadDone) {
+            preloadNextRecord();
+        }
+
+        return hasNextValue;
     }
 
-    return hasNextValue;
-  }
+    @Override
+    public WarcRecord next() {
+        if (!preloadDone) {
+            preloadNextRecord();
+        }
 
-  @Override
-  public WarcRecord next() {
-    if (!preloadDone) {
-      preloadNextRecord();
+        preloadDone = false;
+
+        if (!hasNextValue) {
+            throw new NoSuchElementException();
+        }
+
+        return nextValue;
     }
 
-    preloadDone = false;
+    private void preloadNextRecord() {
+        preloadDone = true;
 
-    if (!hasNextValue) {
-      throw new NoSuchElementException();
+        final Optional<WarcRecord> warcRecord = warcReader.readRecord();
+        hasNextValue = warcRecord.isPresent();
+        nextValue = warcRecord.orElse(null);
     }
-
-    return nextValue;
-  }
-
-  private void preloadNextRecord() {
-    preloadDone = true;
-
-    final Optional<WarcRecord> warcRecord = warcReader.readRecord();
-    hasNextValue = warcRecord.isPresent();
-    nextValue = warcRecord.orElse(null);
-  }
 }

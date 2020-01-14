@@ -16,34 +16,34 @@ import org.apache.http.impl.io.SessionInputBufferImpl;
 
 public class RequestContentBlockFactory {
 
-  private static final int BUFFER_SIZE = 1024;
+    private static final int BUFFER_SIZE = 1024;
 
-  private final HeaderParser headerParser = new HeaderParser();
+    private final HeaderParser headerParser = new HeaderParser();
 
-  public RequestContentBlock createWarcRecord(final BoundedInputStream stream)
-      throws IOException {
-    SessionInputBufferImpl buffer = new SessionInputBufferImpl(new HttpTransportMetricsImpl(),
-        BUFFER_SIZE, 0, null, null);
-    buffer.bind(stream);
-    final DefaultHttpRequestParser requestParser = new DefaultHttpRequestParser(buffer);
-    final HttpRequest request;
-    try {
-      request = requestParser.parse();
-    } catch (HttpException e) {
-      throw new WarcFormatException("Can't parse the request", e);
+    public RequestContentBlock createWarcRecord(final BoundedInputStream stream)
+        throws IOException {
+        SessionInputBufferImpl buffer = new SessionInputBufferImpl(new HttpTransportMetricsImpl(),
+            BUFFER_SIZE, 0, null, null);
+        buffer.bind(stream);
+        final DefaultHttpRequestParser requestParser = new DefaultHttpRequestParser(buffer);
+        final HttpRequest request;
+        try {
+            request = requestParser.parse();
+        } catch (HttpException e) {
+            throw new WarcFormatException("Can't parse the request", e);
+        }
+
+        final RequestLine requestLine = request.getRequestLine();
+        final ProtocolVersion protocolVersion = requestLine.getProtocolVersion();
+
+        return RequestContentBlock.builder()
+            .method(requestLine.getMethod())
+            .location(requestLine.getUri())
+            .protocol(protocolVersion.getProtocol())
+            .majorProtocolVersion(protocolVersion.getMajor())
+            .minorProtocolVersion(protocolVersion.getMinor())
+            .payload(new IdentityInputStream(buffer))
+            .headers(headerParser.parseHeaders(request))
+            .build();
     }
-
-    final RequestLine requestLine = request.getRequestLine();
-    final ProtocolVersion protocolVersion = requestLine.getProtocolVersion();
-
-    return RequestContentBlock.builder()
-        .method(requestLine.getMethod())
-        .location(requestLine.getUri())
-        .protocol(protocolVersion.getProtocol())
-        .majorProtocolVersion(protocolVersion.getMajor())
-        .minorProtocolVersion(protocolVersion.getMinor())
-        .payload(new IdentityInputStream(buffer))
-        .headers(headerParser.parseHeaders(request))
-        .build();
-  }
 }

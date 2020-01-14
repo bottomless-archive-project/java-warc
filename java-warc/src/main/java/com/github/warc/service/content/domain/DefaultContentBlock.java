@@ -9,28 +9,28 @@ import java.io.InputStream;
  */
 public class DefaultContentBlock implements WarcContentBlock {
 
-  protected InputStream payload;
+    protected InputStream payload;
 
-  /**
-   * DefaultContentBlock constructor
-   *
-   * @param input Input stream for content block.
-   */
-  public DefaultContentBlock(final InputStream input) {
-    payload = input;
-  }
+    /**
+     * DefaultContentBlock constructor
+     *
+     * @param input Input stream for content block.
+     */
+    public DefaultContentBlock(final InputStream input) {
+        payload = input;
+    }
 
-  /**
-   * Return content block stream as payload
-   *
-   * @return payload stream
-   */
-  public InputStream getPayload() {
-    return payload;
-  }
+    /**
+     * Return content block stream as payload
+     *
+     * @return payload stream
+     */
+    public InputStream getPayload() {
+        return payload;
+    }
 
-  @Override
-  public String toString() {
-    return payload.toString();
-  }
+    @Override
+    public String toString() {
+        return payload.toString();
+    }
 }

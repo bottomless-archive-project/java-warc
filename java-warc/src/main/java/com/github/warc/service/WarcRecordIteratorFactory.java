@@ -14,7 +14,7 @@ public class WarcRecordIteratorFactory {
     public static Iterator<WarcRecord> iteratorOf(final URL url) {
         try {
             return iteratorOf(new AvailableInputStream(new BufferedInputStream(url.openStream())),
-                    WarcReader.DEFAULT_CHARSET, true);
+                WarcReader.DEFAULT_CHARSET, true);
         } catch (IOException e) {
             throw new WarcNetworkException("Unable to open WARC location: " + url + "!", e);
         }
@@ -29,7 +29,7 @@ public class WarcRecordIteratorFactory {
     }
 
     public static Iterator<WarcRecord> iteratorOf(final InputStream inputStream, final Charset charset,
-            final boolean compressed) {
+        final boolean compressed) {
         final WarcReader warcReader = new WarcReader(inputStream, charset, compressed);
 
         return new WarcRecordIterator(warcReader);

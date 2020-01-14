@@ -24,59 +24,59 @@ import lombok.Builder;
 @Builder
 public class WarcRecord {
 
-  private final WarcRecordType type;
-  private final Map<String, String> headers;
-  private final WarcContentBlock warcContentBlock;
+    private final WarcRecordType type;
+    private final Map<String, String> headers;
+    private final WarcContentBlock warcContentBlock;
 
-  /**
-   * Returns the WARC record's {@link WarcContentBlock}. The returned content block may refer to
-   * different classes based on the type of the WARC record.
-   *
-   * @return the WarcContentBlock object of a WARC record
-   */
-  public WarcContentBlock getWarcContentBlock() {
-    return warcContentBlock;
-  }
+    /**
+     * Returns the WARC record's {@link WarcContentBlock}. The returned content block may refer to
+     * different classes based on the type of the WARC record.
+     *
+     * @return the WarcContentBlock object of a WARC record
+     */
+    public WarcContentBlock getWarcContentBlock() {
+        return warcContentBlock;
+    }
 
 
-  /**
-   * Returns WARC-Type of a WARC record
-   *
-   * @return WARC-Type
-   */
-  public WarcRecordType getType() {
-    return type;
-  }
+    /**
+     * Returns WARC-Type of a WARC record
+     *
+     * @return WARC-Type
+     */
+    public WarcRecordType getType() {
+        return type;
+    }
 
-  /**
-   * Returns WARC-Record-ID of a WARC record. WARC-Record-ID is An identifier assigned to the
-   * current record that is globally unique for intended amount of time WARC-Record-ID is a
-   * mandatory field of record WARC header
-   *
-   * @return WARC-Record-ID string if possible. Returns null when WARC headers does not contain
-   * WARC-Record-ID field
-   */
-  public Optional<String> getRecordId() {
-    return Optional.ofNullable(headers.get("WARC-Record-ID"));
-  }
+    /**
+     * Returns WARC-Record-ID of a WARC record. WARC-Record-ID is An identifier assigned to the
+     * current record that is globally unique for intended amount of time WARC-Record-ID is a
+     * mandatory field of record WARC header
+     *
+     * @return WARC-Record-ID string if possible. Returns null when WARC headers does not contain
+     * WARC-Record-ID field
+     */
+    public Optional<String> getRecordId() {
+        return Optional.ofNullable(headers.get("WARC-Record-ID"));
+    }
 
-  public String getHeader(final String headerName) {
-    return headers.get(headerName);
-  }
+    public String getHeader(final String headerName) {
+        return headers.get(headerName);
+    }
 
-  public Map<String, String> getHeaders() {
-    return Collections.unmodifiableMap(headers);
-  }
+    public Map<String, String> getHeaders() {
+        return Collections.unmodifiableMap(headers);
+    }
 
-  public boolean isRequest() {
-    return type == WarcRecordType.REQUEST;
-  }
+    public boolean isRequest() {
+        return type == WarcRecordType.REQUEST;
+    }
 
-  public boolean isResponse() {
-    return type == WarcRecordType.RESPONSE;
-  }
+    public boolean isResponse() {
+        return type == WarcRecordType.RESPONSE;
+    }
 
-  public boolean isWarcinfo() {
-    return type == WarcRecordType.WARCINFO;
-  }
+    public boolean isWarcinfo() {
+        return type == WarcRecordType.WARCINFO;
+    }
 }
