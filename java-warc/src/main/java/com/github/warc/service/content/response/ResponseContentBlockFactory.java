@@ -38,6 +38,7 @@ public class ResponseContentBlockFactory {
    *
    * @param inputStream the response WARC entry's content block stream
    * @return the newly created content block
+   * @throws IOException when an error happens while reading the input stream
    */
   public ResponseContentBlock newResponseContentBlock(final InputStream inputStream)
       throws IOException {

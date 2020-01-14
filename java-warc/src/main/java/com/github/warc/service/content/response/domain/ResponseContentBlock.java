@@ -68,6 +68,7 @@ public class ResponseContentBlock implements WarcContentBlock {
   /**
    * The charset of the response. If the mime type of the response is not text then this field is
    * null.
+   * @return return the charset of the response content
    */
   public Optional<Charset> getCharset() {
     return Optional.ofNullable(charset);

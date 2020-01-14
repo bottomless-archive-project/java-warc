@@ -1,3 +1,9 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
 subprojects {
     repositories {
         mavenCentral()
@@ -18,6 +24,75 @@ subprojects {
 
     compileTestJava {
         options.encoding = "UTF-8"
+    }
+
+    apply plugin: 'maven'
+
+    apply plugin: 'signing'
+
+    signing {
+        sign configurations.archives
+    }
+
+    apply plugin: 'maven-publish'
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                pom.project {
+                    inceptionYear '2019'
+                    name project.name
+                    packaging 'jar'
+                    description project.description
+
+                    url 'https://github.com/bottomless-archive-project/java-warc.git'
+
+                    scm {
+                        connection 'git@github.com:bottomless-archive-project/java-warc.git'
+                        developerConnection 'git@github.com:bottomless-archive-project/java-warc.git'
+                        url 'https://github.com/bottomless-archive-project/java-warc.git'
+                    }
+
+                    licenses {
+                        license {
+                            name 'Apache License 2.0'
+                            url 'https://opensource.org/licenses/Apache-2.0'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'gyulalakatos'
+                            name 'Gyula Lakatos'
+                            email 'laxika91@gmail.com'
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allJava
+        classifier 'sources'
+    }
+
+    task javadocJar(type: Jar) {
+        from javadoc
+        classifier 'javadoc'
+    }
+
+    artifacts {
+        archives javadocJar, sourcesJar
     }
 
     dependencies {
