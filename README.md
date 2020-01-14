@@ -32,18 +32,18 @@ final WarcReader warcReader = new WarcReader(new FileInputStream(
 
 boolean hasNext = true;
 while (hasNext) {
-  try {
-    final Optional<WarcRecord> optionalWarcRecord = warcReader.readRecord();
+    try {
+        final Optional<WarcRecord> optionalWarcRecord = warcReader.readRecord();
 
-    optionalWarcRecord
-        .filter(WarcRecord::isResponse)
-        .map(warcRecord -> ((ResponseContentBlock) warcRecord.getWarcContentBlock())
-            .getPayloadAsString())
-        .ifPresent(System.out::println);
+        optionalWarcRecord
+            .filter(WarcRecord::isResponse)
+            .map(warcRecord -> ((ResponseContentBlock) warcRecord.getWarcContentBlock())
+                .getPayloadAsString())
+            .ifPresent(System.out::println);
 
-    hasNext = optionalWarcRecord.isPresent();
-  } catch (WarcParsionException e) {
-    e.printStackTrace();
-  }
+        hasNext = optionalWarcRecord.isPresent();
+    } catch (WarcParsionException e) {
+        e.printStackTrace();
+    }
 }
  ```
