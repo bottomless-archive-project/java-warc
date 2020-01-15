@@ -26,7 +26,7 @@ WarcRecordStreamFactory.streamOf(warcUrl)
 
 Read WARC records from a file one by one using the WarcReader class.
 
- ```
+```
 final WarcReader warcReader = new WarcReader(new FileInputStream(
     new File("C:\\warc-test\\CC-MAIN-20180716232549-20180717012549-00001.warc.gz")));
 
@@ -46,4 +46,22 @@ while (hasNext) {
         e.printStackTrace();
     }
 }
- ```
+```
+
+### Installation
+
+The library is available in maven central.
+
+You can use it with maven:
+```
+<dependency>
+  <groupId>com.github.bottomless-archive-project</groupId>
+  <artifactId>java-warc</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
+Or gradle:
+```
+implementation 'com.github.bottomless-archive-project:java-warc:1.0.0'
+```
