@@ -17,6 +17,7 @@ import org.apache.commons.io.IOUtils;
  * An implementation of WarcContentBlock interface to handle contents block's of WARC responses.
  */
 @Builder
+@SuppressWarnings("unused")
 public class ResponseContentBlock implements WarcContentBlock {
 
     /**

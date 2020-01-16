@@ -40,6 +40,7 @@ public class WarcReader {
      *
      * @param datasourceLocation the location of the data source to back this reader
      */
+    @SuppressWarnings("unused")
     public WarcReader(final URL datasourceLocation) {
         this(datasourceLocation, DEFAULT_CHARSET);
     }
@@ -126,6 +127,7 @@ public class WarcReader {
      *
      * @return the freshly read WARC record
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public Optional<WarcRecord> readRecord() {
         if (lastRecordStream != null) {
             try {

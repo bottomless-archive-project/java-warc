@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Builder
+@SuppressWarnings("unused")
 public class RequestContentBlock implements WarcContentBlock {
 
     /**

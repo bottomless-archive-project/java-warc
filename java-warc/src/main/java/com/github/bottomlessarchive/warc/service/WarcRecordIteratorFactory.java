@@ -9,6 +9,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 
+@SuppressWarnings("unused")
 public class WarcRecordIteratorFactory {
 
     public static Iterator<WarcRecord> iteratorOf(final URL url) {

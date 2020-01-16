@@ -12,6 +12,7 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+@SuppressWarnings("unused")
 public class WarcRecordStreamFactory {
 
     public static Stream<WarcRecord> streamOf(final URL url) {

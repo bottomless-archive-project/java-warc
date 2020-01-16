@@ -4,12 +4,11 @@ import java.io.InputStream;
 
 /**
  * A simple implementation of a WarcContentBlock for Most of WARC-Types.
- *
- * @author Hadi Jooybar
  */
+@SuppressWarnings("unused")
 public class DefaultContentBlock implements WarcContentBlock {
 
-    protected InputStream payload;
+    protected final InputStream payload;
 
     /**
      * DefaultContentBlock constructor

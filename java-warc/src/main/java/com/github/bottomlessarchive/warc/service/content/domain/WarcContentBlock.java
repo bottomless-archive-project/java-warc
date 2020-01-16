@@ -10,9 +10,8 @@ import java.io.InputStream;
  * <li> ResponseContentBlock
  * <li> DefaultContentBlock
  * </ul>
- *
- * @author Hadi Jooybar
  */
+@SuppressWarnings("unused")
 public interface WarcContentBlock {
 
     /**

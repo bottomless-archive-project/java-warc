@@ -22,6 +22,7 @@ import lombok.Builder;
  * </ul>
  */
 @Builder
+@SuppressWarnings("unused")
 public class WarcRecord {
 
     private final WarcRecordType type;
