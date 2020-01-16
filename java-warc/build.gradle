@@ -1,4 +1,6 @@
 dependencies {
+    compile group: 'org.jetbrains', name: 'annotations', version: '18.0.0'
+
     compile group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4.13'
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
