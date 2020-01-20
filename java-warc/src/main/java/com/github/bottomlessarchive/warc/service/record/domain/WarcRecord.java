@@ -77,6 +77,31 @@ public class WarcRecord {
         return type == WarcRecordType.RESPONSE;
     }
 
+    public boolean isWarcInfo() {
+        return type == WarcRecordType.WARCINFO;
+    }
+
+    public boolean isResource() {
+        return type == WarcRecordType.RESOURCE;
+    }
+
+    public boolean isMetadata() {
+        return type == WarcRecordType.METADATA;
+    }
+
+    public boolean isRevisit() {
+        return type == WarcRecordType.REVISIT;
+    }
+
+    public boolean isConversion() {
+        return type == WarcRecordType.CONVERSION;
+    }
+
+    public boolean isContinuation() {
+        return type == WarcRecordType.CONTINUATION;
+    }
+
+    @Deprecated(since = "1.1.0", forRemoval = true)
     public boolean isWarcinfo() {
         return type == WarcRecordType.WARCINFO;
     }

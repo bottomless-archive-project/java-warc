@@ -6,7 +6,6 @@ package com.github.bottomlessarchive.warc.service.record.domain;
  * @see <a href="https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.1/#warc-type-mandatory">
  * https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.1/#warc-type-mandatory</a>
  */
-@SuppressWarnings("unused")
 public enum WarcRecordType {
 
     /**
