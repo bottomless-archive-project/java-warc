@@ -2,6 +2,7 @@ package com.github.bottomlessarchive.warc.test;
 
 import com.github.bottomlessarchive.warc.service.WarcParsingException;
 import com.github.bottomlessarchive.warc.service.WarcReader;
+import com.github.bottomlessarchive.warc.service.content.domain.WarcContentBlock;
 import com.github.bottomlessarchive.warc.service.content.response.domain.ResponseContentBlock;
 import com.github.bottomlessarchive.warc.service.record.domain.WarcRecord;
 
@@ -18,7 +19,7 @@ public class TestFileWarcReader {
         boolean hasNext = true;
         while (hasNext) {
             try {
-                final Optional<WarcRecord> optionalWarcRecord = warcReader.readRecord();
+                final Optional<WarcRecord<WarcContentBlock>> optionalWarcRecord = warcReader.readRecord();
 
                 optionalWarcRecord
                     .filter(WarcRecord::isResponse)
