@@ -1,49 +1,54 @@
 package com.github.bottomlessarchive.warc.service.record.domain;
 
 import com.github.bottomlessarchive.warc.service.content.domain.WarcContentBlock;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+
 import lombok.Builder;
 
 /**
- * Basic constituent of a WARC file, consisting of a sequence of WARC records. Class WarcRecord
- * contains all information of a WARC record. WarcRecord consists of
- * <ul>
- * <li> Protocol of the WARC record
- * <li> WARC record headers
- * <ul>
- * <li> WARC-Type
- * <li> WARC-Record-ID
- * <li> WARC-Date
- * <li> Content-Length
- * </ul>
- * <li> WARC record content block
- * </ul>
+ * Basic constituent of a WARC file. Contains all information of a WARC record.
+ *
+ * @see <a href="https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.1/#file-and-record-model">
+ * https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.1/#file-and-record-model</a>
  */
 @Builder
 @SuppressWarnings("unused")
-public class WarcRecord {
+public class WarcRecord<T extends WarcContentBlock> {
 
     private final WarcRecordType type;
     private final Map<String, String> headers;
-    private final WarcContentBlock warcContentBlock;
+    private final T warcContentBlock;
 
     /**
-     * Returns the WARC record's {@link WarcContentBlock}. The returned content block may refer to
-     * different classes based on the type of the WARC record.
+     * Returns the WARC record's {@link WarcContentBlock}. The returned content block may refer to different classes
+     * based on the type of the WARC record.
      *
-     * @return the WarcContentBlock object of a WARC record
+     * @return the content block of a WARC record
      */
-    public WarcContentBlock getWarcContentBlock() {
+    public T getContentBlock() {
         return warcContentBlock;
     }
 
+    /**
+     * Returns the WARC record's {@link WarcContentBlock}. The returned content block may refer to different classes
+     * based on the type of the WARC record.
+     *
+     * @return the content block of a WARC record
+     */
+    @Deprecated(since = "1.1.0", forRemoval = true)
+    public T getWarcContentBlock() {
+        return warcContentBlock;
+    }
 
     /**
-     * Returns WARC-Type of a WARC record
+     * Returns the type of a WARC record.
      *
-     * @return WARC-Type
+     * @return the type of the record
+     * @see <a href="https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.1/#warc-type-mandatory">
+     * https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.1/#warc-type-mandatory</a>
      */
     public WarcRecordType getType() {
         return type;
