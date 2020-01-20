@@ -1,5 +1,6 @@
 package com.github.bottomlessarchive.warc.service;
 
+import com.github.bottomlessarchive.warc.service.content.domain.WarcContentBlock;
 import com.github.bottomlessarchive.warc.service.record.domain.WarcRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,13 +11,13 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
-public class SafeWarcRecordIterator implements Iterator<WarcRecord> {
+public class SafeWarcRecordIterator implements Iterator<WarcRecord<WarcContentBlock>> {
 
     private final WarcReader warcReader;
 
     private boolean preloadDone;
     private boolean hasNextValue;
-    private WarcRecord nextValue;
+    private WarcRecord<WarcContentBlock> nextValue;
 
     @Override
     public boolean hasNext() {
@@ -28,7 +29,7 @@ public class SafeWarcRecordIterator implements Iterator<WarcRecord> {
     }
 
     @Override
-    public WarcRecord next() {
+    public WarcRecord<WarcContentBlock> next() {
         if (!preloadDone) {
             preloadNextRecord();
         }
@@ -46,7 +47,7 @@ public class SafeWarcRecordIterator implements Iterator<WarcRecord> {
         preloadDone = true;
 
         try {
-            final Optional<WarcRecord> warcRecord = warcReader.readRecord();
+            final Optional<WarcRecord<WarcContentBlock>> warcRecord = warcReader.readRecord();
 
             hasNextValue = warcRecord.isPresent();
             nextValue = warcRecord.orElse(null);

@@ -33,7 +33,7 @@ public class WarcRecordFactory {
      * @param contentBlockStream Content block stream
      * @return the created warc record
      */
-    public WarcRecord createWarcRecord(final HeaderGroup warcHeaders,
+    public WarcRecord<WarcContentBlock> createWarcRecord(final HeaderGroup warcHeaders,
         final BoundedInputStream contentBlockStream) {
         WarcRecordType type = null;
         WarcContentBlock warcContentBlock = null;

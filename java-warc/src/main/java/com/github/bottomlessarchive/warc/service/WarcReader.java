@@ -1,5 +1,6 @@
 package com.github.bottomlessarchive.warc.service;
 
+import com.github.bottomlessarchive.warc.service.content.domain.WarcContentBlock;
 import com.github.bottomlessarchive.warc.service.http.HttpParser;
 import com.github.bottomlessarchive.warc.service.record.WarcRecordFactory;
 import com.github.bottomlessarchive.warc.service.record.domain.WarcRecord;
@@ -128,7 +129,7 @@ public class WarcReader {
      * @return the freshly read WARC record
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public Optional<WarcRecord> readRecord() {
+    public Optional<WarcRecord<WarcContentBlock>> readRecord() {
         if (lastRecordStream != null) {
             try {
                 lastRecordStream.skip(Long.MAX_VALUE);
@@ -153,8 +154,8 @@ public class WarcReader {
      * @return the parsed WARC record
      * @throws WarcFormatException when unable to parse the next record
      */
-    protected Optional<WarcRecord> parse() {
-        WarcRecord record;
+    protected Optional<WarcRecord<WarcContentBlock>> parse() {
+        WarcRecord<WarcContentBlock> record;
         String protocol;
         try {
             protocol = HttpParser.readLine(input, charset);
