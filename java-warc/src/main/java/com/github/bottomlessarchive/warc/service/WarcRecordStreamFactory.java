@@ -25,6 +25,16 @@ public class WarcRecordStreamFactory {
     }
 
     public static <T extends WarcContentBlock> Stream<WarcRecord<T>> streamOf(@NotNull @NonNull final URL url,
+            @NotNull @NonNull final WarcRecordType... requiredRecordTypes) {
+        try {
+            return streamOf(new AvailableInputStream(new BufferedInputStream(url.openStream())),
+                    WarcReader.DEFAULT_CHARSET, true, List.of(requiredRecordTypes));
+        } catch (IOException e) {
+            throw new WarcNetworkException("Unable to open WARC location: " + url + "!", e);
+        }
+    }
+
+    public static <T extends WarcContentBlock> Stream<WarcRecord<T>> streamOf(@NotNull @NonNull final URL url,
             @NotNull @NonNull final List<WarcRecordType> requiredRecordTypes) {
         try {
             return streamOf(new AvailableInputStream(new BufferedInputStream(url.openStream())),
