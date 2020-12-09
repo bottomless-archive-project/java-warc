@@ -68,12 +68,12 @@ public class WarcRecordStreamFactory {
         return streamOf(inputStream, charset, compressed, EVERY_WARC_RECORD_TYPE);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T extends WarcContentBlock> Stream<WarcRecord<T>> streamOf(
             @NotNull @NonNull final InputStream inputStream,
             @NotNull @NonNull final Charset charset, final boolean compressed,
             @NotNull @NonNull final List<WarcRecordType> requiredRecordTypes) {
         final WarcReader warcReader = new WarcReader(inputStream, charset, compressed);
-
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
                 new SafeWarcRecordIterator(warcReader), Spliterator.ORDERED | Spliterator.NONNULL), false)
                 .filter(warcRecord -> requiredRecordTypes.contains(warcRecord.getType()))

@@ -12,8 +12,8 @@ public class TestUrlWarcReader {
         final URL warcUrl = new URL(
             "https://commoncrawl.s3.amazonaws.com/crawl-data/CC-MAIN-2018-43/segments/1539583508988.18/warc/CC-MAIN-20181015080248-20181015101748-00000.warc.gz");
 
-        WarcRecordStreamFactory.streamOf(warcUrl, WarcRecordType.RESPONSE)
-            .map(entry -> ((ResponseContentBlock) entry.getContentBlock()).getPayloadAsString())
+        WarcRecordStreamFactory.<ResponseContentBlock>streamOf(warcUrl, WarcRecordType.RESPONSE)
+            .map(entry -> entry.getContentBlock().getPayloadAsString())
             .forEach(System.out::println);
     }
 }
