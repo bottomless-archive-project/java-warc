@@ -98,5 +98,9 @@ subprojects {
     dependencies {
         compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
         annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
+        testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
+        testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
+
+        testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
     }
 }

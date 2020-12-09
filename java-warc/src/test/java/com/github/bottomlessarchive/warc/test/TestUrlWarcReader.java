@@ -3,9 +3,11 @@ package com.github.bottomlessarchive.warc.test;
 import com.github.bottomlessarchive.warc.service.WarcRecordStreamFactory;
 import com.github.bottomlessarchive.warc.service.content.response.domain.ResponseContentBlock;
 import com.github.bottomlessarchive.warc.service.record.domain.WarcRecordType;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
 
+@Slf4j
 public class TestUrlWarcReader {
 
     public static void main(final String... arg) throws Exception {
@@ -14,6 +16,6 @@ public class TestUrlWarcReader {
 
         WarcRecordStreamFactory.<ResponseContentBlock>streamOf(warcUrl, WarcRecordType.RESPONSE)
             .map(entry -> entry.getContentBlock().getPayloadAsString())
-            .forEach(System.out::println);
+            .forEach(log::info);
     }
 }
